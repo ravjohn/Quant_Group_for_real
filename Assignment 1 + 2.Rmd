@@ -1,0 +1,235 @@
+---
+title: "Assignment 1"
+author: "Raveena, Alanna, Jack"
+date: "10/25/2021"
+output: html_document
+---
+
+# Research Question
+How do food access and demographic characteristics impact mental and physical health on a county scale?
+
+# Prior Research
+Seligman and Schillinger (2010) posit that food insecurity and chronic disease follows a cyclical pattern where food insecurity leads to chronic disease, thereby increasing medical costs and causing low income households to make trade-offs in spending, often leading to less money available to address food insecurity. Additionally, the results of Jones (2017) suggests that individual food insecurity is associated with poorer mental health and specific psychosocial stressors across global regions independent of socio-ecoomic status.
+
+# Data
+The sample population for this study is the full set of all census tracts in the United States, for all people over the age of 18. The analysis will include the following variables:
+
+Categorical
+* Access to food options within 1 mile urban or 10 miles rural
+* Education
+* Race
+* Mental Health Outcomes
+
+Continuous
+* Percent of households using SNAP
+* Poverty rate
+* Median income
+* Pct households with children
+
+
+* Access to food options within 1 mile urban or 10 miles rural
+* SNAP recipients by housing units
+* Percent of households using SNAP
+* Poverty rate
+* Age
+* Education
+* Median Income
+* Household size
+* Households with children
+* Race
+* Mental Health Outcomes
+* Physical Health Outcomes
+
+# Load Data
+```{r, message = FALSE, results = FALSE}
+library(tidyverse)
+library(tidycensus)
+library(readxl)
+library(knitr)
+```
+
+## USDA - Food Access Research Database - 2019
+* Access to food options within 1 mile urban or 10 miles rural
+* SNAP recipients by housing units
+* Percent of households using SNAP
+* Poverty rate
+```{r, message = FALSE, results = FALSE, warning = FALSE}
+USDA <- read_csv("Food Access Research Atlas.csv") %>%
+  mutate(CensusTract = case_when(str_length(as.character(CensusTract)) == 11 ~ as.character(CensusTract),
+                           str_length(as.character(CensusTract)) == 10 ~ paste("0", CensusTract, sep=""),
+                           TRUE ~ "not a tract")) %>%
+  mutate(pct_SNAP = TractSNAP / OHU2010) %>%
+  filter(CensusTract != "not a tract") %>%
+  rename(GEOID = CensusTract)%>%
+  select(GEOID, TractSNAP, OHU2010, pct_SNAP, PovertyRate, LA1and10)
+```
+
+## Census Data - 2010
+* Age
+* Education
+* Median Income
+* Household size
+* Households with children
+* Race
+```{r, message = FALSE, results = FALSE, warning = FALSE}
+
+all_states <- c(state.abb)
+
+censusMedAge <- get_decennial(geography = "tract", 
+                        year = 2010,
+                        variables = c(MedAge = "P013001"),
+                        output = "wide",
+                        state = all_states,
+                        geometry = TRUE)%>%
+  select(GEOID,MedAge)
+  
+censusHouseSize <- get_decennial(geography = "tract", 
+                        year = 2010,
+                        variables = c(HSTotal = "H013001",
+                                      HSOne = "H013002",
+                                      HSTwo = "H013003",
+                                      HSThree = "H013004",
+                                      HSFour = "H013005",
+                                      HSFive = "H013006",
+                                      HSSix = "H013007",
+                                      HSSevenPlus = "H013008"),
+                        output = "wide",
+                        state = all_states,
+                        geometry = FALSE)%>%
+  mutate(pct_HSOne = HSOne / HSTotal) %>%
+  mutate(pct_HSTwo = HSTwo / HSTotal) %>%
+  mutate(pct_HSThree = HSThree / HSTotal) %>%
+  mutate(pct_HSFour = HSFour / HSTotal) %>%
+  mutate(pct_HSFive = HSFive / HSTotal) %>%
+  mutate(pct_HSSix = HSSix / HSTotal) %>%
+  mutate(pct_HSSevenPlus = HSSevenPlus / HSTotal) %>%
+  select(GEOID, pct_HSOne, pct_HSTwo, pct_HSThree, pct_HSFour, pct_HSFive, pct_HSSix, pct_HSSevenPlus)
+  
+censusChildren <- get_decennial(geography = "tract", 
+                        year = 2010,
+                        variables = c(TotalWChildren = "H019001",
+                                      OwnWChildren = "H019003",
+                                      RentWChildren = "H019006"),
+                        output = "wide",
+                        state = all_states,
+                        geometry = FALSE)%>%
+  mutate(pct_OwnWChildren = OwnWChildren / TotalWChildren) %>%
+  mutate(pct_RentWChildren = RentWChildren / TotalWChildren) %>%
+  select(GEOID, pct_OwnWChildren, pct_RentWChildren)
+
+censusRace <- get_decennial(geography = "tract", 
+                        year = 2010,
+                        variables = c(RTotal = "P010001",
+                                      RWhite = "P010002",
+                                      RBlack = "P010003",
+                                      RAI = "P010004",
+                                      RAsian = "P010005",
+                                      RNH = "P010006",
+                                      ROther = "P010007",
+                                      RTwoPlus = "P010008"),
+                        output = "wide",
+                        state = all_states,
+                        geometry = FALSE)%>%
+  mutate(pct_RWhite = RWhite / RTotal) %>%
+  mutate(pct_RBlack = RBlack / RTotal) %>%
+  mutate(pct_RAI = RAI / RTotal) %>%
+  mutate(pct_RAsian = RAsian / RTotal) %>%
+  mutate(pct_RNH = RNH / RTotal) %>%
+  mutate(pct_ROther = ROther / RTotal) %>%
+  mutate(pct_RTwoPlus = RTwoPlus / RTotal) %>%
+  select(GEOID, pct_RWhite, pct_RBlack, pct_RAI, pct_RAsian, pct_RNH, pct_ROther, pct_RTwoPlus)
+
+acsEducation<- get_acs(geography = "tract", 
+                   variables = c(EdTotal = "B15003_001",
+                                 EdHighSchool = "B15003_017",
+                                 EdGED = "B15003_018",
+                                 EdAssociates = "B15003_021",
+                                 EdBachelors = "B15003_022",
+                                 EdMasters = "B15003_023",
+                                 EdProfessional = "B15003_024",
+                                 EdDoctorate = "B15003_025"), 
+                   state = all_states,
+                   output = "wide",
+                   geometry = FALSE)%>%
+  mutate(pct_EdHighSchool = EdHighSchoolE / EdTotalE)%>%
+  mutate(pct_EdGED = EdGEDE / EdTotalE)%>%
+  mutate(pct_EdAssociates = EdAssociatesE / EdTotalE)%>%
+  mutate(pct_EdBachelors = EdBachelorsE / EdTotalE)%>%
+  mutate(pct_EdMasters = EdMastersE / EdTotalE)%>%
+  mutate(pct_EdProfessional = EdProfessionalE / EdTotalE)%>%
+  mutate(pct_EdDoctorate = EdDoctorateE / EdTotalE)%>%
+  select(GEOID, pct_EdHighSchool, pct_EdGED, pct_EdAssociates, pct_EdBachelors, pct_EdMasters, pct_EdProfessional, pct_EdDoctorate)
+
+
+acsMedIncome<- get_acs(geography = "tract", 
+                   variables = c(MedIncome = "B06011_001"), 
+                   state = all_states,
+                   output = "wide",
+                   geometry = FALSE)%>%
+  select(GEOID, MedIncomeE)
+```
+
+## CDC - PLACES - 2018
+* Mental Health Outcomes (Mental health not good for >=14 days among adults aged >=18 years)
+* Physical Health Outcomes (Physical health not good for >=14 days among adults aged >=18 years)
+```{r, message = FALSE, results = FALSE, warning = FALSE}
+
+Physical_Health <- read_csv('PLACES__Local_Data_for_Better_Health__Census_Tract_Data_2020_release.csv') %>%
+  filter(Year == 2018) %>%
+  filter(Short_Question_Text == "Physical Health") %>%
+  rename(GEOID = LocationID) %>%
+  group_by(GEOID) %>%
+  select(GEOID, Data_Value, Data_Value_Unit)
+
+Mental_Health <- read_csv('PLACES__Local_Data_for_Better_Health__Census_Tract_Data_2020_release.csv') %>%
+  filter(Year == 2018) %>%
+  filter(Short_Question_Text == "Mental Health") %>%
+  rename(GEOID = LocationID) %>%
+  group_by(GEOID) %>%
+  select(GEOID, Data_Value, Data_Value_Unit)
+```
+
+## CDC - MRFEI
+This dataset uses 2000 Census Tracts instead of 2010, so importing and formatting has been complex. It is not included in our data table, but we hope to use it in future assignments.
+* Healthy Food Sources
+```{r, message = FALSE, results = FALSE, warning = FALSE}
+CDC_MRFEI <- read_excel(path = "2_16_mrfei_data_table.xls", 
+                      sheet = "MRFEI According to Census Tract") %>%
+  rename(GEOID = fips)%>%
+  select(GEOID,mrfei)
+```
+
+## Combine Data into One Table
+```{r, message = FALSE, warning = FALSE}
+data <- left_join(USDA, Physical_Health) %>%
+  left_join(Mental_Health) %>%
+  left_join(censusMedAge)%>%
+  left_join(censusHouseSize) %>%
+  left_join(censusChildren) %>%
+  left_join(censusRace) %>%
+  left_join(acsEducation) %>%
+  left_join(acsMedIncome)
+
+kable(head(data))
+```
+This dataset includes 72,351 census tracts across the United States.
+
+# References
+Ahern, Melissa, Brown, Cheryl, Dukas, Stephen. "A National Study of the Association Between Food Environments and County-Level Health Outcomes." The Journal of Rural Health 27, no. 4 (2011): 367-379. doi: https://doi.org/10.1111/j.1748-0361.2011.00378.x
+
+Centers for Disease Control and Prevention, "Census Tract Level State Maps of the Modified Retail Food Environment Index (mRFEI)" https://www.cdc.gov/obesity/downloads/census-tract-level-state-maps-mrfei_TAG508.pdf
+
+Centers for Disease Control and Prevention, "PLACES: Local Data for Better Health, Census Tract Data 2020 release".
+https://chronicdata.cdc.gov/500-Cities-Places/PLACES-Local-Data-for-Better-Health-Census-Tract-D/cwsq-ngmh
+
+Jones, Andrew D."Food Insecurity and Mental Health Status: A Global Analysis of 149 Countries." American Journal of Preventative Medicine 53, no. 2 (2017): 264-273. doi: https://doi.org/10.1016/j.amepre.2017.04.008
+
+Kaiser ML, Dionne J, Carr JK. "Predictors of Diet-Related Health Outcomes in Food-Secure and Food-Insecure Communities." Soc Work Public Health 34, no.3 (2019):214-229. doi: 10.1080/19371918.2019.1575313. Epub 2019 Feb 15. PMID: 30767652.
+
+Seligman, Hilary K., and Dean Schillinger. "Hunger and Socioeconomic Disparities in Chronic Disease." The New England Journal of Medicine 363, no. 1 (2010): 6-9.
+
+United States Census Bureau. American Community Survey, 5-year estimates. 2019.
+
+United States Census Bureau. 2010.
+
+United States Department of Agriculture. "Food Access Research Atlas". 2019. "https://www.ers.usda.gov/data-products/food-access-research-atlas/download-the-data/"
