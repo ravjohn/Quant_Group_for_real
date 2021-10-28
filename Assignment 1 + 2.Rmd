@@ -78,15 +78,15 @@ censusMedAge <- get_decennial(geography = "tract",
   
 censusChildren <- get_decennial(geography = "tract", 
                         year = 2010,
-                        variables = c(TotalWChildren = "H019001",
+                        variables = c(TotalUnits = "H019001",
                                       OwnWChildren = "H019003",
                                       RentWChildren = "H019006"),
                         output = "wide",
                         state = all_states,
                         geometry = FALSE)%>%
-  mutate(pct_OwnWChildren = OwnWChildren / TotalWChildren) %>%
-  mutate(pct_RentWChildren = RentWChildren / TotalWChildren) %>%
-  select(GEOID, pct_OwnWChildren, pct_RentWChildren)
+  mutate(UnitsWChildren = OwnWChildren + RentWChildren) %>%
+  mutate(pct_UnitsWChildren = UnitsWChildren / TotalUnits) %>%
+  select(GEOID, pct_UnitsWChildren)
 
 censusRace <- get_decennial(geography = "tract", 
                         year = 2010,
@@ -131,6 +131,19 @@ acsEducation<- get_acs(geography = "tract",
   mutate(pct_EdDoctorate = EdDoctorateE / EdTotalE)%>%
   select(GEOID, pct_EdHighSchool, pct_EdGED, pct_EdAssociates, pct_EdBachelors, pct_EdMasters, pct_EdProfessional, pct_EdDoctorate)
 
+acsEducation_mod <- data.frame(acsEducation$pct_EdHighSchool, acsEducation$pct_EdGED, acsEducation$pct_EdAssociates, acsEducation$pct_EdBachelors, acsEducation$pct_EdMasters, acsEducation$pct_EdProfessional, acsEducation$pct_EdDoctorate)%>%
+  rename(
+    "High School" = acsEducation.pct_EdHighSchool,
+    "GED" = acsEducation.pct_EdGED,
+    "Associates" = acsEducation.pct_EdAssociates,
+    "Bachelors" = acsEducation.pct_EdBachelors,
+    "Masters" = acsEducation.pct_EdMasters,
+    "Professional" = acsEducation.pct_EdProfessional,
+    "Doctorate" = acsEducation.pct_EdDoctorate
+  )
+MaxEd <- colnames(acsEducation_mod)[max.col(acsEducation_mod,ties.method = "first")]
+acsEducation <- mutate(acsEducation, MaxEd)%>%
+  select(GEOID, MaxEd)
 
 acsMedIncome<- get_acs(geography = "tract", 
                    variables = c(MedIncome = "B06011_001"), 
@@ -170,6 +183,175 @@ This dataset includes 72,351 census tracts across the United States.
 ## Continuous Variables
 
 ### Percent Households with Children - Raveena
+```{r}
+children_t_test <- t.test(data$pct_UnitsWChildren)
+children_quartiles <- quantile(data$pct_UnitsWChildren, na.rm = TRUE)
+children_st_dev <- sd(data$pct_UnitsWChildren, na.rm = TRUE)
+children_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_UnitsWChildren),
+                 bins = 30)
+```
+
+### Race - Raveena
+```{r}
+RWhite_t_test <- t.test(data$pct_RWhite)
+RBlack_t_test <- t.test(data$pct_RBlack)
+RAI_t_test <- t.test(data$pct_RAI)
+RAsian_t_test <- t.test(data$pct_RAsian)
+RNH_t_test <- t.test(data$pct_RNH)
+ROther_t_test <- t.test(data$pct_ROther)
+RTwoPlus_t_test <- t.test(data$pct_RTwoPlus)
+
+RWhite_quartiles <- quantile(data$pct_RWhite, na.rm = TRUE)
+RBlack_quartiles <- quantile(data$pct_RBlack, na.rm = TRUE)
+RAI_quartiles <- quantile(data$pct_RAI, na.rm = TRUE)
+RAsian_quartiles <- quantile(data$pct_RAsian, na.rm = TRUE)
+RNH_quartiles <- quantile(data$pct_RNH, na.rm = TRUE)
+ROther_quartiles <- quantile(data$pct_ROther, na.rm = TRUE)
+RTwoPlus_quartiles <- quantile(data$pct_RTwoPlus, na.rm = TRUE)
+
+RWhite_st_dev <- sd(data$pct_RWhite, na.rm = TRUE)
+RBlack_st_dev <- sd(data$pct_RBlack, na.rm = TRUE)
+RAI_st_dev <- sd(data$pct_RAI, na.rm = TRUE)
+RAsian_st_dev <- sd(data$pct_RAsian, na.rm = TRUE)
+RNH_st_dev <- sd(data$pct_RNH, na.rm = TRUE)
+ROther_st_dev <- sd(data$pct_ROther, na.rm = TRUE)
+RTwoPlus_st_dev <- sd(data$pct_RTwoPlus, na.rm = TRUE)
+
+RWhite_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RWhite),
+                 bins = 30)
+RBlack_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RBlack),
+                 bins = 30)
+RAI_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RAI),
+                 bins = 30)
+RAsian_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RAsian),
+                 bins = 30)
+RNH_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RNH),
+                 bins = 30)
+ROther_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_ROther),
+                 bins = 30)
+RTwoPlus_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RTwoPlus),
+                 bins = 30)
+```
+
+### Results for Percent Households with Children and Race - Raveena
+```{r}
+Rav_cont_summary <- tibble(
+  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More"),
+  `Sample mean` = c(children_t_test$estimate * 100,
+                    RWhite_t_test$estimate * 100,
+                    RBlack_t_test$estimate * 100,
+                    RAI_t_test$estimate * 100,
+                    RAsian_t_test$estimate * 100,
+                    RNH_t_test$estimate * 100,
+                    ROther_t_test$estimate * 100,
+                    RTwoPlus_t_test$estimate * 100),
+  `Population mean (95% confidence) - low` = 
+    c(children_t_test$conf.int[1] * 100,
+                    RWhite_t_test$conf.int[1] * 100,
+                    RBlack_t_test$conf.int[1] * 100,
+                    RAI_t_test$conf.int[1] * 100,
+                    RAsian_t_test$conf.int[1] * 100,
+                    RNH_t_test$conf.int[1] * 100,
+                    ROther_t_test$conf.int[1] * 100,
+                    RTwoPlus_t_test$conf.int[1]* 100),
+  `Population mean (95% confidence) - high` =
+      c(children_t_test$conf.int[2] * 100,
+                    RWhite_t_test$conf.int[2] * 100,
+                    RBlack_t_test$conf.int[2] * 100,
+                    RAI_t_test$conf.int[2] * 100,
+                    RAsian_t_test$conf.int[2] * 100,
+                    RNH_t_test$conf.int[2] * 100,
+                    ROther_t_test$conf.int[2] * 100,
+                    RTwoPlus_t_test$conf.int[2] * 100),
+    Median = c(children_quartiles[3] * 100,
+                    RWhite_quartiles[3] * 100,
+                    RBlack_quartiles[3] * 100,
+                    RAI_quartiles[3] * 100,
+                    RAsian_quartiles[3] * 100,
+                    RNH_quartiles[3] * 100,
+                    ROther_quartiles[3] * 100,
+                    RTwoPlus_quartiles[3]*100),
+    `Interquartile range` = c((children_quartiles[4] - children_quartiles[2]) * 100,
+                              (RWhite_quartiles[4] - RWhite_quartiles[2]) * 100,
+                              (RBlack_quartiles[4] - RBlack_quartiles[2]) * 100,
+                              (RAI_quartiles[4] - RAI_quartiles[2]) * 100,
+                              (RAsian_quartiles[4] - RAsian_quartiles[2]) * 100,
+                              (RNH_quartiles[4] - RNH_quartiles[2]) * 100,
+                              (ROther_quartiles[4] - ROther_quartiles[2]) * 100,
+                              (RTwoPlus_quartiles[4] - RTwoPlus_quartiles[2]) * 100),
+   `Standard deviation` = c(children_st_dev * 100,
+                            RWhite_st_dev * 100,
+                            RBlack_st_dev * 100,
+                            RAI_st_dev * 100,
+                            RAsian_st_dev * 100,
+                            RNH_st_dev * 100,
+                            ROther_st_dev * 100,
+                            RTwoPlus_st_dev * 100)
+)
+
+kable(Rav_cont_summary, digits = 0)
+
+pretty_children_hist <- children_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Households with Children") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(axis.text.x = element_text(angle = 90))
+
+pretty_RWhite_hist <- RWhite_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% White Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(axis.text.x = element_text(angle = 90))
+
+pretty_RBlack_hist <- RBlack_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Black Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(axis.text.x = element_text(angle = 90))
+
+pretty_RAI_hist <- RAI_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% AI/AN Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(axis.text.x = element_text(angle = 90))
+
+pretty_RAsian_hist <- RAsian_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Asian Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(axis.text.x = element_text(angle = 90))
+
+pretty_RNH_hist <- RNH_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Hawiian Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(axis.text.x = element_text(angle = 90))
+
+pretty_ROther_hist <- ROther_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Other") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(axis.text.x = element_text(angle = 90))
+
+pretty_RTwoPlus_hist <- RTwoPlus_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Two or More") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(axis.text.x = element_text(angle = 90))
+
+grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, pretty_RAI_hist, pretty_RAsian_hist, pretty_ROther_hist, pretty_RTwoPlus_hist,
+             ncol = 3)
+```
+
+
 
 ### Poverty Rate - Alanna
 
@@ -278,8 +460,69 @@ ggplot(cat_summary_access) +
 ```
 
 ### Education - Raveena
+```{r}
+pct_EdHS <- t.test(data$MaxEd == "High School")
+pct_EdGED <- t.test(data$MaxEd == "GED")
+pct_EdAssociates <- t.test(data$MaxEd == "Associates")
+pct_EdBachelors <- t.test(data$MaxEd == "Bachelors")
+pct_EdMasters <- t.test(data$MaxEd == "Masters")
+pct_EdProfessional <- t.test(data$MaxEd == "Professional")
+pct_EdDoctorate <- t.test(data$MaxEd == "Doctorate")
+```
 
-### Race - Raveena
+
+###Display Education - Raveena
+```{r}
+cat_summary_Ed <- tibble(`Educational Attainment` = 
+                              c("High School",
+                                "GED",
+                                "Associates",
+                                "Bachelors",
+                                "Masters",
+                                "Professional",
+                                "Doctorate"),
+                            `Sample proportion` = 
+                              c(pct_EdHS$estimate * 100,
+                                pct_EdGED$estimate * 100,
+                                pct_EdAssociates$estimate * 100,
+                                pct_EdBachelors$estimate * 100,
+                                pct_EdMasters$estimate * 100,
+                                pct_EdProfessional$estimate * 100,
+                                pct_EdDoctorate$estimate * 100),
+                            `95-percent confidence - low` = 
+                              c(pct_EdHS$conf.int[1] * 100,
+                                pct_EdGED$conf.int[1] * 100,
+                                pct_EdAssociates$conf.int[1] * 100,
+                                pct_EdBachelors$conf.int[1] * 100,
+                                pct_EdMasters$conf.int[1] * 100,
+                                pct_EdProfessional$conf.int[1] * 100,
+                                pct_EdDoctorate$conf.int[1] * 100),
+                            `95-percent confidence - high` = 
+                              c(pct_EdHS$conf.int[2] * 100,
+                                pct_EdGED$conf.int[2] * 100,
+                                pct_EdAssociates$conf.int[2] * 100,
+                                pct_EdBachelors$conf.int[2] * 100,
+                                pct_EdMasters$conf.int[2] * 100,
+                                pct_EdProfessional$conf.int[2] * 100,
+                                pct_EdDoctorate$conf.int[2] * 100))
+
+kable(cat_summary_Ed, digits = 0)
+
+ggplot(cat_summary_Ed) +
+  geom_bar(aes(x = `Educational Attainment`, 
+               y = `Sample proportion`),
+           stat = "identity") +
+  geom_errorbar(aes(x = `Educational Attainment`, 
+               y = `Sample proportion`,
+               ymin = `95-percent confidence - low`,
+               ymax = `95-percent confidence - high`),
+           stat = "identity") +
+  scale_y_continuous(name = "Percent of census tracts",
+                     breaks = c(0, 20, 40, 60, 80),
+                     labels = c("0", "20%", "40%", "60%", "80%")) +
+  theme_bw()
+```
+
 
 ### Mental Health Outcomes - Alanna
 
