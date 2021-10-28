@@ -2,7 +2,11 @@
 title: "Assignment 1+2"
 author: "Raveena, Alanna, Jack"
 date: "10/25/2021"
-output: html_document
+output: html_document:
+  theme: readable
+  toc: true
+  toc_depth: 3
+  toc_float: true
 ---
 
 # Research Question
@@ -49,6 +53,7 @@ USDA <- read_csv("Food Access Research Atlas.csv") %>%
                            TRUE ~ "not a tract")) %>%
   mutate(pct_SNAP = TractSNAP / OHU2010) %>%
   filter(CensusTract != "not a tract") %>%
+  filter(pct_SNAP != "Inf") %>%
   rename(GEOID = CensusTract)%>%
   select(GEOID, pct_SNAP, PovertyRate, LA1and10)
 ```
@@ -166,11 +171,68 @@ This dataset includes 72,351 census tracts across the United States.
 
 ### Percent Households with Children - Raveena
 
-### Percent Households using SNAP - Jack
-
 ### Poverty Rate - Alanna
 
+### Percent Households using SNAP - Jack
+```{r}
+SNAP_t_test <- t.test(data$pct_SNAP)
+SNAP_quartiles <- quantile(data$pct_SNAP, na.rm = TRUE)
+SNAP_st_dev <- sd(data$pct_SNAP, na.rm = TRUE)
+SNAP_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_SNAP),
+                 bins = 30)
+```
+
 ### Median Income - Jack
+```{r}
+income_t_test <- t.test(data$MedIncomeE)
+income_quartiles <- quantile(data$MedIncomeE, na.rm = TRUE)
+income_st_dev <- sd(data$MedIncomeE, na.rm = TRUE)
+income_hist <- ggplot(data) +
+  geom_histogram(aes(x = MedIncomeE),
+                 bins = 30)
+```
+
+### Results for Percent Households Using SNAP and Median Income - Jack
+```{r}
+Jack_cont_summary <- tibble(
+  Variable = c("Percent Households SNAP", 
+               "Median Income"),
+  `Sample mean` = c(SNAP_t_test$estimate *100,
+                    income_t_test$estimate),
+  `Population mean (95% confidence) - low` = 
+    c(SNAP_t_test$conf.int[1] *100,
+      income_t_test$conf.int[1]),
+  `Population mean (95% confidence) - high` =
+    c(SNAP_t_test$conf.int[2] *100,
+      income_t_test$conf.int[2]),
+  Median = c(SNAP_quartiles[3] *100,
+             income_quartiles[3]),
+  `Interquartile range` = c((SNAP_quartiles[4] - SNAP_quartiles[2]) *100,
+                            income_quartiles[4] - income_quartiles[2]),
+  `Standard deviation` = c(SNAP_st_dev,
+                          income_st_dev))
+
+kable(Jack_cont_summary, digits = 2)
+
+
+pretty_SNAP_hist <- SNAP_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Percent Households SNAP") +
+  scale_y_continuous(name = "Number of Census Tracts") +
+  theme(axis.text.x = element_text(angle = 90))
+
+pretty_income_hist = income_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Median Income",
+                     breaks = seq(0, 100, by=50),
+                     labels = seq(0, 100000, by = 50000)) +
+  scale_y_continuous(name = "Number of Census Tracts") +
+  theme(axis.text.x = element_text(angle = 90)) 
+
+grid.arrange(pretty_SNAP_hist, pretty_income_hist,
+             ncol = 3)
+```
 
 ### Age
 
@@ -178,6 +240,42 @@ This dataset includes 72,351 census tracts across the United States.
 ## Categorical Variables
 
 ### Access to food options within 1 mile urban or 10 miles rural - Jack
+```{r}
+pct_access <- t.test(data$LA1and10 == "0")
+pct_noaccess <-  t.test(data$LA1and10 == "1")
+```
+
+### Display Access to food options within 1 mile urban or 10 miles rural - Jack
+```{r}
+cat_summary_access <- tibble(`Access to Food` = 
+                              c("Access",
+                                "No Access"),
+                            `Sample proportion` = 
+                              c(pct_access$estimate * 100,
+                                pct_noaccess$estimate *100),
+                            `95-percent confidence - low` = 
+                              c(pct_access$conf.int[1] * 100,
+                                pct_noaccess$conf.int[1] * 100),
+                            `95-percent confidence - high` = 
+                              c(pct_access$conf.int[2] * 100,
+                                pct_noaccess$conf.int[2] * 100))
+
+kable(cat_summary_access, digits = 0)
+
+ggplot(cat_summary_access) +
+  geom_bar(aes(x = `Access to Food`, 
+               y = `Sample proportion`),
+           stat = "identity") +
+  geom_errorbar(aes(x = `Access to Food`, 
+               y = `Sample proportion`,
+               ymin = `95-percent confidence - low`,
+               ymax = `95-percent confidence - high`),
+           stat = "identity") +
+  scale_y_continuous(name = "Percent of Census Tracts",
+                     breaks = c(0, 20, 40, 60, 80),
+                     labels = c("0", "20%", "40%", "60%", "80%")) +
+  theme_bw()
+```
 
 ### Education - Raveena
 
