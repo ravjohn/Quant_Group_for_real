@@ -139,7 +139,7 @@ acsMedIncome<- get_acs(geography = "tract",
 * Mental Health Outcomes (Mental health not good for >=14 days among adults aged >=18 years)
 * Physical Health Outcomes (Physical health not good for >=14 days among adults aged >=18 years)
 ```{r, message = FALSE, results = FALSE, warning = FALSE}
-Mental_Health <- read_csv('PLACES__Local_Data_for_Better_Health__Census_Tract_Data_2020_release.csv') %>%
+Mental_Health <- read_csv('data/PLACES__Local_Data_for_Better_Health__Census_Tract_Data_2020_release.csv') %>%
   filter(Year == 2018) %>%
   filter(Short_Question_Text == "Mental Health") %>%
   rename(GEOID = LocationID) %>%
