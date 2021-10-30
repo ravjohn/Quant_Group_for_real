@@ -157,12 +157,19 @@ acsMedIncome<- get_acs(geography = "tract",
 * Mental Health Outcomes (Mental health not good for >=14 days among adults aged >=18 years)
 * Physical Health Outcomes (Physical health not good for >=14 days among adults aged >=18 years)
 ```{r, message = FALSE, results = FALSE, warning = FALSE}
-Mental_Health <- read_csv('data/PLACES__Local_Data_for_Better_Health__Census_Tract_Data_2020_release.csv') %>%
+Mental_Health <- read_csv("data/PLACES__Local_Data_for_Better_Health__Census_Tract_Data_2020_release.csv") %>%
   filter(Year == 2018) %>%
   filter(Short_Question_Text == "Mental Health") %>%
   rename(GEOID = LocationID) %>%
   group_by(GEOID) %>%
-  select(GEOID, Data_Value, Data_Value_Unit)
+  select(GEOID, StateAbbr, Measure, Data_Value, Data_Value_Unit)
+
+
+Mental_Health$Catg <- cut(Mental_Health$Data_Value, breaks = c(0, 5, 10, 15, 20, 30, 35, Inf),
+                  labels = c("very low", "low", "moderate", "signficant", "high", "very high", "critical level"))
+
+
+
 ```
 
 
@@ -354,6 +361,44 @@ grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, prett
 
 
 ### Poverty Rate - Alanna
+```{r}
+pov_t_test <- t.test(USDA$PovertyRate)
+pov_quartiles <- quantile(USDA$PovertyRate, na.rm = TRUE)
+pov_st_dev <- sd(USDA$PovertyRate, na.rm = TRUE)
+pov_hist <- ggplot(USDA) +
+  geom_histogram(aes(x = PovertyRate),
+                 bins = 30)
+
+
+```
+### Results for Poverty Rate - Alanna
+```{r,  fig.height=3 and fig.width=7}
+Alanna_cont_summary <- tibble(
+  Variable = c("Poverty Rate"),
+  `Sample mean` = c(pov_t_test$estimate),
+  `Population mean (95% confidence) - low` = 
+    c(pov_t_test$conf.int[1]),
+  `Population mean (95% confidence) - high` =
+    c(pov_t_test$conf.int[2]),
+  Median = c(pov_quartiles[3]),
+  `Interquartile range` = c(pov_quartiles[4] - pov_quartiles[2]),
+  `Standard deviation` = c(pov_st_dev))
+
+kable(Alanna_cont_summary, digits = 1)
+
+
+pretty_pov_hist <- pov_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Median Poverty Rate") +
+  scale_y_continuous(name = "Number of Census Tracks") +
+  theme(axis.text.x = element_text(angle = 90))
+
+
+```
+
+
+
+
 
 ### Percent Households using SNAP - Jack
 ```{r}
@@ -526,8 +571,72 @@ ggplot(cat_summary_Ed) +
 
 ### Mental Health Outcomes - Alanna
 
+```{r}
+pct_Vlow_PMH <- t.test(Mental_Health$Catg == "very low")
+pct_low_PMH <- t.test(Mental_Health$Catg == "low")
+pct_moderate_PMH <- t.test(Mental_Health$Catg == "moderate")
+pct_signif_PMH <- t.test(Mental_Health$Catg == "significant")
+pct_high_PMH <- t.test(Mental_Health$Catg == "high")
+pct_Vhigh_PMH <- t.test(Mental_Health$Catg == "very high")
+pct_critical_PMH <- t.test(Mental_Health$Catg == "critical level")
+
+```
+
+### Display Poor Mental Health Outcomes
+```{r}
+cat_summary_PMHO <- tibble(`Instances of Adults Reporting 14 or More Days of Poor Mental Health` = 
+                              c("very low",
+                                "low",
+                                "moderate",
+                                "significant",
+                                "high",
+                                "very high",
+                                "critical level"),
+                            `Sample proportion` = 
+                              c(pct_Vlow_PMH$estimate * 100,
+                                pct_low_PMH$estimate * 100,
+                                pct_moderate_PMH$estimate * 100,
+                                pct_signif_PMH$estimate * 100,
+                                pct_high_PMH$estimate * 100,
+                                pct_Vhigh_PMH$estimate * 100,
+                                pct_critical_PMH$estimate * 100),
+                            `95-percent confidence - low` = 
+                              c(pct_Vlow_PMH$conf.int[1] * 100,
+                                pct_low_PMH$conf.int[1] * 100,
+                                pct_moderate_PMH$conf.int[1] * 100,
+                                pct_signif_PMH$conf.int[1] * 100,
+                                pct_high_PMH$conf.int[1] * 100,
+                                pct_Vhigh_PMH$conf.int[1] * 100,
+                                pct_critical_PMH$conf.int[1] * 100),
+                            `95-percent confidence - high` = 
+                              c(pct_Vlow_PMH$conf.int[2] * 100,
+                                pct_low_PMH$conf.int[2] * 100,
+                                pct_moderate_PMH$conf.int[2] * 100,
+                                pct_signif_PMH$conf.int[2] * 100,
+                                pct_high_PMH$conf.int[2] * 100,
+                                pct_Vhigh_PMH$conf.int[2] * 100,
+                                pct_critical_PMH$conf.int[2] * 100))
+
+kable(cat_summary_PMHO, digits = 1)
 
 
+ggplot(cat_summary_PMHO) +
+  geom_bar(aes(x = `Instances of Adults Reporting 14 or More Days of Poor Mental Health`, 
+               y = `Sample proportion`),
+           stat = "identity") +
+  geom_errorbar(aes(x = `Instances of Adults Reporting 14 or More Days of Poor Mental Health`, 
+               y = `Sample proportion`,
+               ymin = `95-percent confidence - low`,
+               ymax = `95-percent confidence - high`),
+           stat = "identity") +
+  scale_y_continuous(name = "Percent of census blocks",
+                     breaks = c(0, 10, 20, 30, 40),
+                     labels = c("0", "10%", "20%", "30%", "40%")) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90)) 
+
+
+```
 
 
 
