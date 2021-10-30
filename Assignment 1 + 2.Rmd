@@ -35,7 +35,7 @@ Continuous
 * Age
 
 # Load Data
-```{r, message = FALSE, results = FALSE}
+```{r, message = FALSE, results = FALSE, warning = FALSE}
 library(tidyverse)
 library(tidycensus)
 library(readxl)
@@ -305,7 +305,7 @@ age_hist <- ggplot(data) +
 
 
 ### Results for Continuous Variables
-```{r}
+```{r, warning = FALSE}
 cont_summary <- tibble(
   Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More", "Median Age","Poverty Rate", "Percent Households SNAP", "Median Income", "Poor Mental Health for 14 days or more"),
   `Sample mean` = c(children_t_test$estimate * 100,
@@ -390,86 +390,86 @@ cont_summary <- tibble(
                             MentalHealth_st_dev * 100))
 
 kable(cont_summary, digits = 0)
+```
 
+```{r warning = FALSE}
 pretty_children_hist <- children_hist +
   theme_bw() +
   scale_x_continuous(name = "% Households with Children") +
   scale_y_continuous(name = "Number of census tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RWhite_hist <- RWhite_hist +
   theme_bw() +
   scale_x_continuous(name = "% White Only") +
   scale_y_continuous(name = "Number of census tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RBlack_hist <- RBlack_hist +
   theme_bw() +
   scale_x_continuous(name = "% Black Only") +
   scale_y_continuous(name = "Number of census tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RAI_hist <- RAI_hist +
   theme_bw() +
   scale_x_continuous(name = "% AI/AN Only") +
   scale_y_continuous(name = "Number of census tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RAsian_hist <- RAsian_hist +
   theme_bw() +
   scale_x_continuous(name = "% Asian Only") +
   scale_y_continuous(name = "Number of census tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RNH_hist <- RNH_hist +
   theme_bw() +
   scale_x_continuous(name = "% Hawiian Only") +
   scale_y_continuous(name = "Number of census tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_ROther_hist <- ROther_hist +
   theme_bw() +
   scale_x_continuous(name = "% Other") +
   scale_y_continuous(name = "Number of census tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RTwoPlus_hist <- RTwoPlus_hist +
   theme_bw() +
   scale_x_continuous(name = "% Two or More") +
   scale_y_continuous(name = "Number of census tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_age_hist <- age_hist +
   theme_bw() +
   scale_x_continuous(name = "Median Age") +
   scale_y_continuous(name = "Number of census tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_pov_hist <- pov_hist +
   theme_bw() +
   scale_x_continuous(name = "Median Poverty Rate") +
   scale_y_continuous(name = "Number of Census Tracks") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_SNAP_hist <- SNAP_hist +
   theme_bw() +
   scale_x_continuous(name = "Percent Households SNAP") +
   scale_y_continuous(name = "Number of Census Tracts") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_income_hist = income_hist +
   theme_bw() +
-  scale_x_continuous(name = "Median Income",
-                     breaks = seq(0, 100, by=50),
-                     labels = seq(0, 100000, by = 50000)) +
+  scale_x_continuous(name = "Median Income") +
   scale_y_continuous(name = "Number of Census Tracts") +
-  theme(axis.text.x = element_text(angle = 90)) 
+  theme(text = element_text(size=6), axis.text.x = element_text(angle = 90)) 
 
 pretty_MentalHealth_hist <- MentalHealth_hist +
   theme_bw() +
-  scale_x_continuous(name = "Percent of Adults Reporting Negetive Mental Health for 14+ days") +
+  scale_x_continuous(name = "Percent of Adults Reporting Negative\n Mental Health for 14+ days") +
   scale_y_continuous(name = "Number of Census Tracks") +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, pretty_RAI_hist, pretty_RAsian_hist, pretty_ROther_hist, pretty_RTwoPlus_hist, pretty_age_hist, pretty_pov_hist, pretty_SNAP_hist, pretty_income_hist, pretty_MentalHealth_hist,
              ncol = 3)
