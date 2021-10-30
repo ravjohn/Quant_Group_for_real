@@ -2,11 +2,7 @@
 title: "Assignment 1+2"
 author: "Raveena, Alanna, Jack"
 date: "10/25/2021"
-output: html_document:
-  theme: readable
-  toc: true
-  toc_depth: 3
-  toc_float: true
+output: "html_document"
 ---
 
 # Research Question
