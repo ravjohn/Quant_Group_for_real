@@ -1,12 +1,17 @@
 ---
 title: "Assignment 1+2"
 author: "Raveena, Alanna, Jack"
-date: "10/25/2021"
-output: "html_document"
+date: "10/30/2021"
+output: 
+  html_document:
+    theme: readable
+    toc: true
+    toc_depth: 3
+    toc_float: true
 ---
 
 # Research Question
-How do food access and demographic characteristics impact mental and physical health on a county scale?
+How do food access and demographic characteristics impact mental health on a census tract scale?
 
 # Prior Research
 Seligman and Schillinger (2010) posit that food insecurity and chronic disease follows a cyclical pattern where food insecurity leads to chronic disease, thereby increasing medical costs and causing low income households to make trade-offs in spending, often leading to less money available to address food insecurity. Additionally, the results of Jones (2017) suggests that individual food insecurity is associated with poorer mental health and specific psychosocial stressors across global regions independent of socio-ecoomic status.
@@ -15,12 +20,14 @@ Seligman and Schillinger (2010) posit that food insecurity and chronic disease f
 The sample population for this study is the full set of all census tracts in the United States, for all people over the age of 18. The analysis will include the following variables:
 
 Categorical
+
 * Access to food options within 1 mile urban or 10 miles rural
 * Education
 * Race
 * Mental Health Outcomes
 
 Continuous
+
 * Percent of households using SNAP
 * Poverty rate
 * Median income
@@ -151,7 +158,6 @@ acsMedIncome<- get_acs(geography = "tract",
 
 ## CDC - PLACES - 2018
 * Mental Health Outcomes (Mental health not good for >=14 days among adults aged >=18 years)
-* Physical Health Outcomes (Physical health not good for >=14 days among adults aged >=18 years)
 ```{r, message = FALSE, results = FALSE, warning = FALSE}
 Mental_Health <- read_csv("data/PLACES__Local_Data_for_Better_Health__Census_Tract_Data_2020_release.csv") %>%
   filter(Year == 2018) %>%
