@@ -185,7 +185,17 @@ This dataset includes 72,351 census tracts across the United States.
 # Descriptive Statistics
 ## Continuous Variables
 
-### Percent Households with Children - Raveena
+### Mental Health
+```{r}
+MentalHealth_t_test <- t.test(Mental_Health$Data_Value)
+MentalHealth_quartiles <- quantile(Mental_Health$Data_Value, na.rm = TRUE)
+MentalHealth_st_dev <- sd(Mental_Health$Data_Value, na.rm = TRUE)
+MentalHealth_hist <- ggplot(Mental_Health) +
+  geom_histogram(aes(x = Data_Value),
+                 bins = 30)
+```
+
+### Percent Households with Children
 ```{r}
 children_t_test <- t.test(data$pct_UnitsWChildren)
 children_quartiles <- quantile(data$pct_UnitsWChildren, na.rm = TRUE)
@@ -195,7 +205,7 @@ children_hist <- ggplot(data) +
                  bins = 30)
 ```
 
-### Race - Raveena
+### Race
 ```{r}
 RWhite_t_test <- t.test(data$pct_RWhite)
 RBlack_t_test <- t.test(data$pct_RBlack)
@@ -245,7 +255,7 @@ RTwoPlus_hist <- ggplot(data) +
 ```
 
 
-### Poverty Rate - Alanna
+### Poverty Rate
 ```{r}
 pov_t_test <- t.test(USDA$PovertyRate)
 pov_quartiles <- quantile(USDA$PovertyRate, na.rm = TRUE)
@@ -253,12 +263,10 @@ pov_st_dev <- sd(USDA$PovertyRate, na.rm = TRUE)
 pov_hist <- ggplot(USDA) +
   geom_histogram(aes(x = PovertyRate),
                  bins = 30)
-
-
 ```
 
 
-### Percent Households using SNAP - Jack
+### Percent Households using SNAP
 ```{r}
 SNAP_t_test <- t.test(data$pct_SNAP)
 SNAP_quartiles <- quantile(data$pct_SNAP, na.rm = TRUE)
@@ -268,7 +276,7 @@ SNAP_hist <- ggplot(data) +
                  bins = 30)
 ```
 
-### Median Income - Jack
+### Median Income
 ```{r}
 income_t_test <- t.test(data$MedIncomeE)
 income_quartiles <- quantile(data$MedIncomeE, na.rm = TRUE)
@@ -293,7 +301,7 @@ age_hist <- ggplot(data) +
 ### Results for Continuous Variables
 ```{r}
 cont_summary <- tibble(
-  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More", "Median Age","Poverty Rate", "Percent Households SNAP", "Median Income"),
+  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More", "Median Age","Poverty Rate", "Percent Households SNAP", "Median Income", "Poor Mental Health for 14 days or more"),
   `Sample mean` = c(children_t_test$estimate * 100,
                     RWhite_t_test$estimate * 100,
                     RBlack_t_test$estimate * 100,
@@ -305,7 +313,8 @@ cont_summary <- tibble(
                     age_t_test$estimate,
                     pov_t_test$estimate,
                     SNAP_t_test$estimate *100,
-                    income_t_test$estimate),
+                    income_t_test$estimate,
+                    MentalHealth_t_test$estimate * 100),
   `Population mean (95% confidence) - low` = 
     c(children_t_test$conf.int[1] * 100,
                     RWhite_t_test$conf.int[1] * 100,
@@ -318,7 +327,8 @@ cont_summary <- tibble(
                     age_t_test$conf.int[1],
                     pov_t_test$conf.int[1],
                     SNAP_t_test$conf.int[1] *100,
-                    income_t_test$conf.int[1]),
+                    income_t_test$conf.int[1],
+                    MentalHealth_t_test$conf.int[1]*100),
   `Population mean (95% confidence) - high` =
       c(children_t_test$conf.int[2] * 100,
                     RWhite_t_test$conf.int[2] * 100,
@@ -331,7 +341,8 @@ cont_summary <- tibble(
                     age_t_test$conf.int[2],
                     pov_t_test$conf.int[2],
                     SNAP_t_test$conf.int[2] *100,
-                    income_t_test$conf.int[2]),
+                    income_t_test$conf.int[2],
+                    MentalHealth_t_test$conf.int[2]),
     Median = c(children_quartiles[3] * 100,
                     RWhite_quartiles[3] * 100,
                     RBlack_quartiles[3] * 100,
@@ -343,7 +354,8 @@ cont_summary <- tibble(
                     age_quartiles[3],
                     pov_quartiles[3],
                     SNAP_quartiles[3] *100,
-                    income_quartiles[3]),
+                    income_quartiles[3],
+                    MentalHealth_quartiles[3] *100),
     `Interquartile range` = c((children_quartiles[4] - children_quartiles[2]) * 100,
                               (RWhite_quartiles[4] - RWhite_quartiles[2]) * 100,
                               (RBlack_quartiles[4] - RBlack_quartiles[2]) * 100,
@@ -355,7 +367,8 @@ cont_summary <- tibble(
                               age_quartiles[4] - age_quartiles[2],
                               pov_quartiles[4] - pov_quartiles[2],
                               (SNAP_quartiles[4] - SNAP_quartiles[2]) *100,
-                               income_quartiles[4] - income_quartiles[2]),
+                               income_quartiles[4] - income_quartiles[2],
+                              (MentalHealth_quartiles[4] - MentalHealth_quartiles[2]) *100),
    `Standard deviation` = c(children_st_dev * 100,
                             RWhite_st_dev * 100,
                             RBlack_st_dev * 100,
@@ -367,7 +380,8 @@ cont_summary <- tibble(
                             age_st_dev,
                             pov_st_dev,
                             SNAP_st_dev,
-                            income_st_dev))
+                            income_st_dev,
+                            MentalHealth_st_dev * 100))
 
 kable(cont_summary, digits = 0)
 
@@ -445,20 +459,26 @@ pretty_income_hist = income_hist +
   scale_y_continuous(name = "Number of Census Tracts") +
   theme(axis.text.x = element_text(angle = 90)) 
 
-grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, pretty_RAI_hist, pretty_RAsian_hist, pretty_ROther_hist, pretty_RTwoPlus_hist, pretty_age_hist, pretty_pov_hist, pretty_SNAP_hist, pretty_income_hist,
+pretty_MentalHealth_hist <- MentalHealth_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Percent of Adults Reporting Negetive Mental Health for 14+ days") +
+  scale_y_continuous(name = "Number of Census Tracks") +
+  theme(axis.text.x = element_text(angle = 90))
+
+grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, pretty_RAI_hist, pretty_RAsian_hist, pretty_ROther_hist, pretty_RTwoPlus_hist, pretty_age_hist, pretty_pov_hist, pretty_SNAP_hist, pretty_income_hist, pretty_MentalHealth_hist,
              ncol = 3)
 ```
 
 
 ## Categorical Variables
 
-### Access to food options within 1 mile urban or 10 miles rural - Jack
+### Access to food options within 1 mile urban or 10 miles rural
 ```{r}
 pct_access <- t.test(data$LA1and10 == "0")
 pct_noaccess <-  t.test(data$LA1and10 == "1")
 ```
 
-### Display Access to food options within 1 mile urban or 10 miles rural - Jack
+### Display Access to food options within 1 mile urban or 10 miles rural
 ```{r}
 cat_summary_access <- tibble(`Access to Food` = 
                               c("Access",
@@ -490,7 +510,7 @@ ggplot(cat_summary_access) +
   theme_bw()
 ```
 
-### Education - Raveena
+### Education
 ```{r}
 pct_EdHS <- t.test(data$MaxEd == "High School")
 pct_EdGED <- t.test(data$MaxEd == "GED")
@@ -501,7 +521,7 @@ pct_EdProfessional <- t.test(data$MaxEd == "Professional")
 pct_EdDoctorate <- t.test(data$MaxEd == "Doctorate")
 ```
 
-### Display Education - Raveena
+### Display Education
 ```{r}
 cat_summary_Ed <- tibble(`Educational Attainment` = 
                               c("High School",
@@ -552,80 +572,6 @@ ggplot(cat_summary_Ed) +
                      labels = c("0", "20%", "40%", "60%", "80%")) +
   theme_bw()
 ```
-
-### Poor Mental Health Outcomes - Alanna
-```{r}
-pct_Vlow_PMH <- t.test(Mental_Health$Catg == "very low")
-pct_low_PMH <- t.test(Mental_Health$Catg == "low")
-pct_moderate_PMH <- t.test(Mental_Health$Catg == "moderate")
-pct_signif_PMH <- t.test(Mental_Health$Catg == "significant")
-pct_high_PMH <- t.test(Mental_Health$Catg == "high")
-pct_Vhigh_PMH <- t.test(Mental_Health$Catg == "very high")
-pct_critical_PMH <- t.test(Mental_Health$Catg == "critical level")
-
-```
-
-### Display Poor Mental Health Outcomes - Alanna
-```{r}
-
-# QUESTION: How do we want to describe mental health outcomes? Instances? Frequency? Cases?
-
-cat_summary_PMHO <- tibble(`Instances of Adults Reporting 14 or More Days of Poor Mental Health` = 
-                              c("very low",
-                                "low",
-                                "moderate",
-                                "significant",
-                                "high",
-                                "very high",
-                                "critical level"),
-                            `Sample proportion` = 
-                              c(pct_Vlow_PMH$estimate * 100,
-                                pct_low_PMH$estimate * 100,
-                                pct_moderate_PMH$estimate * 100,
-                                pct_signif_PMH$estimate * 100,
-                                pct_high_PMH$estimate * 100,
-                                pct_Vhigh_PMH$estimate * 100,
-                                pct_critical_PMH$estimate * 100),
-                            `95-percent confidence - low` = 
-                              c(pct_Vlow_PMH$conf.int[1] * 100,
-                                pct_low_PMH$conf.int[1] * 100,
-                                pct_moderate_PMH$conf.int[1] * 100,
-                                pct_signif_PMH$conf.int[1] * 100,
-                                pct_high_PMH$conf.int[1] * 100,
-                                pct_Vhigh_PMH$conf.int[1] * 100,
-                                pct_critical_PMH$conf.int[1] * 100),
-                            `95-percent confidence - high` = 
-                              c(pct_Vlow_PMH$conf.int[2] * 100,
-                                pct_low_PMH$conf.int[2] * 100,
-                                pct_moderate_PMH$conf.int[2] * 100,
-                                pct_signif_PMH$conf.int[2] * 100,
-                                pct_high_PMH$conf.int[2] * 100,
-                                pct_Vhigh_PMH$conf.int[2] * 100,
-                                pct_critical_PMH$conf.int[2] * 100))
-
-kable(cat_summary_PMHO, digits = 1)
-
-
-ggplot(cat_summary_PMHO) +
-  geom_bar(aes(x = `Instances of Adults Reporting 14 or More Days of Poor Mental Health`, 
-               y = `Sample proportion`),
-           stat = "identity") +
-  geom_errorbar(aes(x = `Instances of Adults Reporting 14 or More Days of Poor Mental Health`, 
-               y = `Sample proportion`,
-               ymin = `95-percent confidence - low`,
-               ymax = `95-percent confidence - high`),
-           stat = "identity") +
-  scale_y_continuous(name = "Percent of census blocks",
-                     breaks = c(0, 10, 20, 30, 40),
-                     labels = c("0", "10%", "20%", "30%", "40%")) +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 90)) 
-
-
-```
-
-
-
 
 
 # References
