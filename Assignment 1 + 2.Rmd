@@ -584,6 +584,9 @@ pct_critical_PMH <- t.test(Mental_Health$Catg == "critical level")
 
 ### Display Poor Mental Health Outcomes
 ```{r}
+
+# QUESTION: How do we want to describe mental health outcomes? Instances? Frequency? Cases?
+
 cat_summary_PMHO <- tibble(`Instances of Adults Reporting 14 or More Days of Poor Mental Health` = 
                               c("very low",
                                 "low",
