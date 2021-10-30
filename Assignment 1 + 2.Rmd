@@ -244,10 +244,56 @@ RTwoPlus_hist <- ggplot(data) +
                  bins = 30)
 ```
 
-### Results for Percent Households with Children and Race - Raveena
+
+### Poverty Rate - Alanna
 ```{r}
-Rav_cont_summary <- tibble(
-  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More"),
+pov_t_test <- t.test(USDA$PovertyRate)
+pov_quartiles <- quantile(USDA$PovertyRate, na.rm = TRUE)
+pov_st_dev <- sd(USDA$PovertyRate, na.rm = TRUE)
+pov_hist <- ggplot(USDA) +
+  geom_histogram(aes(x = PovertyRate),
+                 bins = 30)
+
+
+```
+
+
+### Percent Households using SNAP - Jack
+```{r}
+SNAP_t_test <- t.test(data$pct_SNAP)
+SNAP_quartiles <- quantile(data$pct_SNAP, na.rm = TRUE)
+SNAP_st_dev <- sd(data$pct_SNAP, na.rm = TRUE)
+SNAP_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_SNAP),
+                 bins = 30)
+```
+
+### Median Income - Jack
+```{r}
+income_t_test <- t.test(data$MedIncomeE)
+income_quartiles <- quantile(data$MedIncomeE, na.rm = TRUE)
+income_st_dev <- sd(data$MedIncomeE, na.rm = TRUE)
+income_hist <- ggplot(data) +
+  geom_histogram(aes(x = MedIncomeE),
+                 bins = 30)
+```
+
+
+### Age
+```{r}
+age_t_test <- t.test(data$MedAge)
+age_quartiles <- quantile(data$MedAge, na.rm = TRUE)
+age_st_dev <- sd(data$MedAge, na.rm = TRUE)
+age_hist <- ggplot(data) +
+  geom_histogram(aes(x = MedAge),
+                 bins = 30)
+```
+
+
+### Results for Continuous Variables
+```{r}
+cont_summary <- tibble(
+  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More", "Median Age","Poverty Rate", "Percent Households SNAP", "Median Income"),
   `Sample mean` = c(children_t_test$estimate * 100,
                     RWhite_t_test$estimate * 100,
                     RBlack_t_test$estimate * 100,
@@ -255,7 +301,11 @@ Rav_cont_summary <- tibble(
                     RAsian_t_test$estimate * 100,
                     RNH_t_test$estimate * 100,
                     ROther_t_test$estimate * 100,
-                    RTwoPlus_t_test$estimate * 100),
+                    RTwoPlus_t_test$estimate * 100,
+                    age_t_test$estimate,
+                    pov_t_test$estimate,
+                    SNAP_t_test$estimate *100,
+                    income_t_test$estimate),
   `Population mean (95% confidence) - low` = 
     c(children_t_test$conf.int[1] * 100,
                     RWhite_t_test$conf.int[1] * 100,
@@ -264,7 +314,11 @@ Rav_cont_summary <- tibble(
                     RAsian_t_test$conf.int[1] * 100,
                     RNH_t_test$conf.int[1] * 100,
                     ROther_t_test$conf.int[1] * 100,
-                    RTwoPlus_t_test$conf.int[1]* 100),
+                    RTwoPlus_t_test$conf.int[1]* 100,
+                    age_t_test$conf.int[1],
+                    pov_t_test$conf.int[1],
+                    SNAP_t_test$conf.int[1] *100,
+                    income_t_test$conf.int[1]),
   `Population mean (95% confidence) - high` =
       c(children_t_test$conf.int[2] * 100,
                     RWhite_t_test$conf.int[2] * 100,
@@ -273,7 +327,11 @@ Rav_cont_summary <- tibble(
                     RAsian_t_test$conf.int[2] * 100,
                     RNH_t_test$conf.int[2] * 100,
                     ROther_t_test$conf.int[2] * 100,
-                    RTwoPlus_t_test$conf.int[2] * 100),
+                    RTwoPlus_t_test$conf.int[2] * 100,
+                    age_t_test$conf.int[2],
+                    pov_t_test$conf.int[2],
+                    SNAP_t_test$conf.int[2] *100,
+                    income_t_test$conf.int[2]),
     Median = c(children_quartiles[3] * 100,
                     RWhite_quartiles[3] * 100,
                     RBlack_quartiles[3] * 100,
@@ -281,7 +339,11 @@ Rav_cont_summary <- tibble(
                     RAsian_quartiles[3] * 100,
                     RNH_quartiles[3] * 100,
                     ROther_quartiles[3] * 100,
-                    RTwoPlus_quartiles[3]*100),
+                    RTwoPlus_quartiles[3]*100,
+                    age_quartiles[3],
+                    pov_quartiles[3],
+                    SNAP_quartiles[3] *100,
+                    income_quartiles[3]),
     `Interquartile range` = c((children_quartiles[4] - children_quartiles[2]) * 100,
                               (RWhite_quartiles[4] - RWhite_quartiles[2]) * 100,
                               (RBlack_quartiles[4] - RBlack_quartiles[2]) * 100,
@@ -289,7 +351,11 @@ Rav_cont_summary <- tibble(
                               (RAsian_quartiles[4] - RAsian_quartiles[2]) * 100,
                               (RNH_quartiles[4] - RNH_quartiles[2]) * 100,
                               (ROther_quartiles[4] - ROther_quartiles[2]) * 100,
-                              (RTwoPlus_quartiles[4] - RTwoPlus_quartiles[2]) * 100),
+                              (RTwoPlus_quartiles[4] - RTwoPlus_quartiles[2]) * 100,
+                              age_quartiles[4] - age_quartiles[2],
+                              pov_quartiles[4] - pov_quartiles[2],
+                              (SNAP_quartiles[4] - SNAP_quartiles[2]) *100,
+                               income_quartiles[4] - income_quartiles[2]),
    `Standard deviation` = c(children_st_dev * 100,
                             RWhite_st_dev * 100,
                             RBlack_st_dev * 100,
@@ -297,10 +363,13 @@ Rav_cont_summary <- tibble(
                             RAsian_st_dev * 100,
                             RNH_st_dev * 100,
                             ROther_st_dev * 100,
-                            RTwoPlus_st_dev * 100)
-)
+                            RTwoPlus_st_dev * 100,
+                            age_st_dev,
+                            pov_st_dev,
+                            SNAP_st_dev,
+                            income_st_dev))
 
-kable(Rav_cont_summary, digits = 0)
+kable(cont_summary, digits = 0)
 
 pretty_children_hist <- children_hist +
   theme_bw() +
@@ -350,94 +419,17 @@ pretty_RTwoPlus_hist <- RTwoPlus_hist +
   scale_y_continuous(name = "Number of census tracts") +
   theme(axis.text.x = element_text(angle = 90))
 
-grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, pretty_RAI_hist, pretty_RAsian_hist, pretty_ROther_hist, pretty_RTwoPlus_hist,
-             ncol = 3)
-```
-
-
-
-### Poverty Rate - Alanna
-```{r}
-pov_t_test <- t.test(USDA$PovertyRate)
-pov_quartiles <- quantile(USDA$PovertyRate, na.rm = TRUE)
-pov_st_dev <- sd(USDA$PovertyRate, na.rm = TRUE)
-pov_hist <- ggplot(USDA) +
-  geom_histogram(aes(x = PovertyRate),
-                 bins = 30)
-
-
-```
-### Results for Poverty Rate - Alanna
-```{r,  fig.height=3 and fig.width=7}
-Alanna_cont_summary <- tibble(
-  Variable = c("Poverty Rate"),
-  `Sample mean` = c(pov_t_test$estimate),
-  `Population mean (95% confidence) - low` = 
-    c(pov_t_test$conf.int[1]),
-  `Population mean (95% confidence) - high` =
-    c(pov_t_test$conf.int[2]),
-  Median = c(pov_quartiles[3]),
-  `Interquartile range` = c(pov_quartiles[4] - pov_quartiles[2]),
-  `Standard deviation` = c(pov_st_dev))
-
-kable(Alanna_cont_summary, digits = 1)
-
+pretty_age_hist <- age_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Median Age") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(axis.text.x = element_text(angle = 90))
 
 pretty_pov_hist <- pov_hist +
   theme_bw() +
   scale_x_continuous(name = "Median Poverty Rate") +
   scale_y_continuous(name = "Number of Census Tracks") +
   theme(axis.text.x = element_text(angle = 90))
-
-
-```
-
-
-
-
-
-### Percent Households using SNAP - Jack
-```{r}
-SNAP_t_test <- t.test(data$pct_SNAP)
-SNAP_quartiles <- quantile(data$pct_SNAP, na.rm = TRUE)
-SNAP_st_dev <- sd(data$pct_SNAP, na.rm = TRUE)
-SNAP_hist <- ggplot(data) +
-  geom_histogram(aes(x = pct_SNAP),
-                 bins = 30)
-```
-
-### Median Income - Jack
-```{r}
-income_t_test <- t.test(data$MedIncomeE)
-income_quartiles <- quantile(data$MedIncomeE, na.rm = TRUE)
-income_st_dev <- sd(data$MedIncomeE, na.rm = TRUE)
-income_hist <- ggplot(data) +
-  geom_histogram(aes(x = MedIncomeE),
-                 bins = 30)
-```
-
-### Results for Percent Households Using SNAP and Median Income - Jack
-```{r}
-Jack_cont_summary <- tibble(
-  Variable = c("Percent Households SNAP", 
-               "Median Income"),
-  `Sample mean` = c(SNAP_t_test$estimate *100,
-                    income_t_test$estimate),
-  `Population mean (95% confidence) - low` = 
-    c(SNAP_t_test$conf.int[1] *100,
-      income_t_test$conf.int[1]),
-  `Population mean (95% confidence) - high` =
-    c(SNAP_t_test$conf.int[2] *100,
-      income_t_test$conf.int[2]),
-  Median = c(SNAP_quartiles[3] *100,
-             income_quartiles[3]),
-  `Interquartile range` = c((SNAP_quartiles[4] - SNAP_quartiles[2]) *100,
-                            income_quartiles[4] - income_quartiles[2]),
-  `Standard deviation` = c(SNAP_st_dev,
-                          income_st_dev))
-
-kable(Jack_cont_summary, digits = 2)
-
 
 pretty_SNAP_hist <- SNAP_hist +
   theme_bw() +
@@ -453,11 +445,9 @@ pretty_income_hist = income_hist +
   scale_y_continuous(name = "Number of Census Tracts") +
   theme(axis.text.x = element_text(angle = 90)) 
 
-grid.arrange(pretty_SNAP_hist, pretty_income_hist,
+grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, pretty_RAI_hist, pretty_RAsian_hist, pretty_ROther_hist, pretty_RTwoPlus_hist, pretty_age_hist, pretty_pov_hist, pretty_SNAP_hist, pretty_income_hist,
              ncol = 3)
 ```
-
-### Age
 
 
 ## Categorical Variables
