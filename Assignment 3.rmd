@@ -1,0 +1,465 @@
+---
+title: "Assignment 3"
+author: "Raveena, Alanna, Jack"
+date: "11/11/2021"
+output: 
+  html_document:
+    theme: readable
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+# Research Question
+How do food access and demographic characteristics impact mental health on a census tract scale?
+
+# Prior Research
+Seligman and Schillinger (2010) posit that food insecurity and chronic disease follows a cyclical pattern where food insecurity leads to chronic disease, thereby increasing medical costs and causing low income households to make trade-offs in spending, often leading to less money available to address food insecurity. Additionally, the results of Jones (2017) suggests that individual food insecurity is associated with poorer mental health and specific psychosocial stressors across global regions independent of socio-ecoomic status.
+
+# Data
+The sample population for this study is the full set of all census tracts in the United States, for all people over the age of 18. The analysis will include the following variables:
+
+Categorical
+
+* Access to food options within 1 mile urban or 10 miles rural
+* Education
+* Race
+* Mental Health Outcomes
+
+Continuous
+
+* Percent of households using SNAP
+* Poverty rate
+* Median income
+* Pct households with children
+* Age
+
+# Load Data
+```{r, message = FALSE, results = FALSE, warning = FALSE}
+library(tidyverse)
+library(tidycensus)
+library(readxl)
+library(knitr)
+library(tigris)
+library(sf)
+library(gridExtra)
+```
+
+
+## Load Data Table
+```{r, message = FALSE, warning = FALSE}
+data <- "data table.csv"
+```
+This dataset includes 72,351 census tracts across the United States.
+
+# Descriptive Statistics
+## Continuous Variables
+
+### Mental Health
+```{r}
+MentalHealth_t_test <- t.test(Mental_Health$Data_Value)
+MentalHealth_quartiles <- quantile(Mental_Health$Data_Value, na.rm = TRUE)
+MentalHealth_st_dev <- sd(Mental_Health$Data_Value, na.rm = TRUE)
+MentalHealth_hist <- ggplot(Mental_Health) +
+  geom_histogram(aes(x = Data_Value),
+                 bins = 30)
+```
+
+### Percent Households with Children
+```{r}
+children_t_test <- t.test(data$pct_UnitsWChildren)
+children_quartiles <- quantile(data$pct_UnitsWChildren, na.rm = TRUE)
+children_st_dev <- sd(data$pct_UnitsWChildren, na.rm = TRUE)
+children_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_UnitsWChildren),
+                 bins = 30)
+```
+
+### Race
+```{r}
+RWhite_t_test <- t.test(data$pct_RWhite)
+RBlack_t_test <- t.test(data$pct_RBlack)
+RAI_t_test <- t.test(data$pct_RAI)
+RAsian_t_test <- t.test(data$pct_RAsian)
+RNH_t_test <- t.test(data$pct_RNH)
+ROther_t_test <- t.test(data$pct_ROther)
+RTwoPlus_t_test <- t.test(data$pct_RTwoPlus)
+
+RWhite_quartiles <- quantile(data$pct_RWhite, na.rm = TRUE)
+RBlack_quartiles <- quantile(data$pct_RBlack, na.rm = TRUE)
+RAI_quartiles <- quantile(data$pct_RAI, na.rm = TRUE)
+RAsian_quartiles <- quantile(data$pct_RAsian, na.rm = TRUE)
+RNH_quartiles <- quantile(data$pct_RNH, na.rm = TRUE)
+ROther_quartiles <- quantile(data$pct_ROther, na.rm = TRUE)
+RTwoPlus_quartiles <- quantile(data$pct_RTwoPlus, na.rm = TRUE)
+
+RWhite_st_dev <- sd(data$pct_RWhite, na.rm = TRUE)
+RBlack_st_dev <- sd(data$pct_RBlack, na.rm = TRUE)
+RAI_st_dev <- sd(data$pct_RAI, na.rm = TRUE)
+RAsian_st_dev <- sd(data$pct_RAsian, na.rm = TRUE)
+RNH_st_dev <- sd(data$pct_RNH, na.rm = TRUE)
+ROther_st_dev <- sd(data$pct_ROther, na.rm = TRUE)
+RTwoPlus_st_dev <- sd(data$pct_RTwoPlus, na.rm = TRUE)
+
+RWhite_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RWhite),
+                 bins = 30)
+RBlack_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RBlack),
+                 bins = 30)
+RAI_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RAI),
+                 bins = 30)
+RAsian_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RAsian),
+                 bins = 30)
+RNH_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RNH),
+                 bins = 30)
+ROther_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_ROther),
+                 bins = 30)
+RTwoPlus_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_RTwoPlus),
+                 bins = 30)
+```
+
+
+### Poverty Rate
+```{r}
+pov_t_test <- t.test(USDA$PovertyRate)
+pov_quartiles <- quantile(USDA$PovertyRate, na.rm = TRUE)
+pov_st_dev <- sd(USDA$PovertyRate, na.rm = TRUE)
+pov_hist <- ggplot(USDA) +
+  geom_histogram(aes(x = PovertyRate),
+                 bins = 30)
+```
+
+
+### Percent Households using SNAP
+```{r}
+SNAP_t_test <- t.test(data$pct_SNAP)
+SNAP_quartiles <- quantile(data$pct_SNAP, na.rm = TRUE)
+SNAP_st_dev <- sd(data$pct_SNAP, na.rm = TRUE)
+SNAP_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_SNAP),
+                 bins = 30)
+```
+
+### Median Income
+```{r}
+income_t_test <- t.test(data$MedIncomeE)
+income_quartiles <- quantile(data$MedIncomeE, na.rm = TRUE)
+income_st_dev <- sd(data$MedIncomeE, na.rm = TRUE)
+income_hist <- ggplot(data) +
+  geom_histogram(aes(x = MedIncomeE),
+                 bins = 30)
+```
+
+
+### Age
+```{r}
+age_t_test <- t.test(data$MedAge)
+age_quartiles <- quantile(data$MedAge, na.rm = TRUE)
+age_st_dev <- sd(data$MedAge, na.rm = TRUE)
+age_hist <- ggplot(data) +
+  geom_histogram(aes(x = MedAge),
+                 bins = 30)
+```
+
+
+### Results for Continuous Variables
+```{r, warning = FALSE}
+cont_summary <- tibble(
+  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More", "Median Age","Poverty Rate", "Percent Households SNAP", "Median Income", "Poor Mental Health for 14 days or more"),
+  `Sample mean` = c(children_t_test$estimate * 100,
+                    RWhite_t_test$estimate * 100,
+                    RBlack_t_test$estimate * 100,
+                    RAI_t_test$estimate * 100,
+                    RAsian_t_test$estimate * 100,
+                    RNH_t_test$estimate * 100,
+                    ROther_t_test$estimate * 100,
+                    RTwoPlus_t_test$estimate * 100,
+                    age_t_test$estimate,
+                    pov_t_test$estimate,
+                    SNAP_t_test$estimate *100,
+                    income_t_test$estimate,
+                    MentalHealth_t_test$estimate * 100),
+  `Population mean (95% confidence) - low` = 
+    c(children_t_test$conf.int[1] * 100,
+                    RWhite_t_test$conf.int[1] * 100,
+                    RBlack_t_test$conf.int[1] * 100,
+                    RAI_t_test$conf.int[1] * 100,
+                    RAsian_t_test$conf.int[1] * 100,
+                    RNH_t_test$conf.int[1] * 100,
+                    ROther_t_test$conf.int[1] * 100,
+                    RTwoPlus_t_test$conf.int[1]* 100,
+                    age_t_test$conf.int[1],
+                    pov_t_test$conf.int[1],
+                    SNAP_t_test$conf.int[1] *100,
+                    income_t_test$conf.int[1],
+                    MentalHealth_t_test$conf.int[1]*100),
+  `Population mean (95% confidence) - high` =
+      c(children_t_test$conf.int[2] * 100,
+                    RWhite_t_test$conf.int[2] * 100,
+                    RBlack_t_test$conf.int[2] * 100,
+                    RAI_t_test$conf.int[2] * 100,
+                    RAsian_t_test$conf.int[2] * 100,
+                    RNH_t_test$conf.int[2] * 100,
+                    ROther_t_test$conf.int[2] * 100,
+                    RTwoPlus_t_test$conf.int[2] * 100,
+                    age_t_test$conf.int[2],
+                    pov_t_test$conf.int[2],
+                    SNAP_t_test$conf.int[2] *100,
+                    income_t_test$conf.int[2],
+                    MentalHealth_t_test$conf.int[2]),
+    Median = c(children_quartiles[3] * 100,
+                    RWhite_quartiles[3] * 100,
+                    RBlack_quartiles[3] * 100,
+                    RAI_quartiles[3] * 100,
+                    RAsian_quartiles[3] * 100,
+                    RNH_quartiles[3] * 100,
+                    ROther_quartiles[3] * 100,
+                    RTwoPlus_quartiles[3]*100,
+                    age_quartiles[3],
+                    pov_quartiles[3],
+                    SNAP_quartiles[3] *100,
+                    income_quartiles[3],
+                    MentalHealth_quartiles[3] *100),
+    `Interquartile range` = c((children_quartiles[4] - children_quartiles[2]) * 100,
+                              (RWhite_quartiles[4] - RWhite_quartiles[2]) * 100,
+                              (RBlack_quartiles[4] - RBlack_quartiles[2]) * 100,
+                              (RAI_quartiles[4] - RAI_quartiles[2]) * 100,
+                              (RAsian_quartiles[4] - RAsian_quartiles[2]) * 100,
+                              (RNH_quartiles[4] - RNH_quartiles[2]) * 100,
+                              (ROther_quartiles[4] - ROther_quartiles[2]) * 100,
+                              (RTwoPlus_quartiles[4] - RTwoPlus_quartiles[2]) * 100,
+                              age_quartiles[4] - age_quartiles[2],
+                              pov_quartiles[4] - pov_quartiles[2],
+                              (SNAP_quartiles[4] - SNAP_quartiles[2]) *100,
+                               income_quartiles[4] - income_quartiles[2],
+                              (MentalHealth_quartiles[4] - MentalHealth_quartiles[2]) *100),
+   `Standard deviation` = c(children_st_dev * 100,
+                            RWhite_st_dev * 100,
+                            RBlack_st_dev * 100,
+                            RAI_st_dev * 100,
+                            RAsian_st_dev * 100,
+                            RNH_st_dev * 100,
+                            ROther_st_dev * 100,
+                            RTwoPlus_st_dev * 100,
+                            age_st_dev,
+                            pov_st_dev,
+                            SNAP_st_dev,
+                            income_st_dev,
+                            MentalHealth_st_dev * 100))
+
+kable(cont_summary, digits = 0)
+```
+
+```{r warning = FALSE}
+pretty_children_hist <- children_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Households with Children") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_RWhite_hist <- RWhite_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% White Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_RBlack_hist <- RBlack_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Black Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_RAI_hist <- RAI_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% AI/AN Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_RAsian_hist <- RAsian_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Asian Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_RNH_hist <- RNH_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Hawiian Only") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_ROther_hist <- ROther_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Other") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_RTwoPlus_hist <- RTwoPlus_hist +
+  theme_bw() +
+  scale_x_continuous(name = "% Two or More") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_age_hist <- age_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Median Age") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_pov_hist <- pov_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Median Poverty Rate") +
+  scale_y_continuous(name = "Number of Census Tracks") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_SNAP_hist <- SNAP_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Percent Households SNAP") +
+  scale_y_continuous(name = "Number of Census Tracts") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+pretty_income_hist = income_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Median Income") +
+  scale_y_continuous(name = "Number of Census Tracts") +
+  theme(text = element_text(size=6), axis.text.x = element_text(angle = 90)) 
+
+pretty_MentalHealth_hist <- MentalHealth_hist +
+  theme_bw() +
+  scale_x_continuous(name = "Percent of Adults Reporting Negative\n Mental Health for 14+ days") +
+  scale_y_continuous(name = "Number of Census Tracks") +
+  theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
+
+grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, pretty_RAI_hist, pretty_RAsian_hist, pretty_ROther_hist, pretty_RTwoPlus_hist, pretty_age_hist, pretty_pov_hist, pretty_SNAP_hist, pretty_income_hist, pretty_MentalHealth_hist,
+             ncol = 3)
+```
+
+
+## Categorical Variables
+
+### Access to food options within 1 mile urban or 10 miles rural
+```{r}
+pct_access <- t.test(data$LA1and10 == "0")
+pct_noaccess <-  t.test(data$LA1and10 == "1")
+```
+
+### Display Access to food options within 1 mile urban or 10 miles rural
+```{r}
+cat_summary_access <- tibble(`Access to Food` = 
+                              c("Access",
+                                "No Access"),
+                            `Sample proportion` = 
+                              c(pct_access$estimate * 100,
+                                pct_noaccess$estimate *100),
+                            `95-percent confidence - low` = 
+                              c(pct_access$conf.int[1] * 100,
+                                pct_noaccess$conf.int[1] * 100),
+                            `95-percent confidence - high` = 
+                              c(pct_access$conf.int[2] * 100,
+                                pct_noaccess$conf.int[2] * 100))
+
+kable(cat_summary_access, digits = 0)
+
+ggplot(cat_summary_access) +
+  geom_bar(aes(x = `Access to Food`, 
+               y = `Sample proportion`),
+           stat = "identity") +
+  geom_errorbar(aes(x = `Access to Food`, 
+               y = `Sample proportion`,
+               ymin = `95-percent confidence - low`,
+               ymax = `95-percent confidence - high`),
+           stat = "identity") +
+  scale_y_continuous(name = "Percent of Census Tracts",
+                     breaks = c(0, 20, 40, 60, 80),
+                     labels = c("0", "20%", "40%", "60%", "80%")) +
+  theme_bw()
+```
+
+### Education
+```{r}
+pct_EdHS <- t.test(data$MaxEd == "High School")
+pct_EdGED <- t.test(data$MaxEd == "GED")
+pct_EdAssociates <- t.test(data$MaxEd == "Associates")
+pct_EdBachelors <- t.test(data$MaxEd == "Bachelors")
+pct_EdMasters <- t.test(data$MaxEd == "Masters")
+pct_EdProfessional <- t.test(data$MaxEd == "Professional")
+pct_EdDoctorate <- t.test(data$MaxEd == "Doctorate")
+```
+
+### Display Education
+```{r}
+cat_summary_Ed <- tibble(`Educational Attainment` = 
+                              c("High School",
+                                "GED",
+                                "Associates",
+                                "Bachelors",
+                                "Masters",
+                                "Professional",
+                                "Doctorate"),
+                            `Sample proportion` = 
+                              c(pct_EdHS$estimate * 100,
+                                pct_EdGED$estimate * 100,
+                                pct_EdAssociates$estimate * 100,
+                                pct_EdBachelors$estimate * 100,
+                                pct_EdMasters$estimate * 100,
+                                pct_EdProfessional$estimate * 100,
+                                pct_EdDoctorate$estimate * 100),
+                            `95-percent confidence - low` = 
+                              c(pct_EdHS$conf.int[1] * 100,
+                                pct_EdGED$conf.int[1] * 100,
+                                pct_EdAssociates$conf.int[1] * 100,
+                                pct_EdBachelors$conf.int[1] * 100,
+                                pct_EdMasters$conf.int[1] * 100,
+                                pct_EdProfessional$conf.int[1] * 100,
+                                pct_EdDoctorate$conf.int[1] * 100),
+                            `95-percent confidence - high` = 
+                              c(pct_EdHS$conf.int[2] * 100,
+                                pct_EdGED$conf.int[2] * 100,
+                                pct_EdAssociates$conf.int[2] * 100,
+                                pct_EdBachelors$conf.int[2] * 100,
+                                pct_EdMasters$conf.int[2] * 100,
+                                pct_EdProfessional$conf.int[2] * 100,
+                                pct_EdDoctorate$conf.int[2] * 100))
+
+kable(cat_summary_Ed, digits = 0)
+
+ggplot(cat_summary_Ed) +
+  geom_bar(aes(x = `Educational Attainment`, 
+               y = `Sample proportion`),
+           stat = "identity") +
+  geom_errorbar(aes(x = `Educational Attainment`, 
+               y = `Sample proportion`,
+               ymin = `95-percent confidence - low`,
+               ymax = `95-percent confidence - high`),
+           stat = "identity") +
+  scale_y_continuous(name = "Percent of census tracts",
+                     breaks = c(0, 20, 40, 60, 80),
+                     labels = c("0", "20%", "40%", "60%", "80%")) +
+  theme_bw()
+```
+
+
+# References
+Ahern, Melissa, Brown, Cheryl, Dukas, Stephen. "A National Study of the Association Between Food Environments and County-Level Health Outcomes." The Journal of Rural Health 27, no. 4 (2011): 367-379. doi: https://doi.org/10.1111/j.1748-0361.2011.00378.x
+
+Centers for Disease Control and Prevention, "Census Tract Level State Maps of the Modified Retail Food Environment Index (mRFEI)" https://www.cdc.gov/obesity/downloads/census-tract-level-state-maps-mrfei_TAG508.pdf
+
+Centers for Disease Control and Prevention, "PLACES: Local Data for Better Health, Census Tract Data 2020 release".
+https://chronicdata.cdc.gov/500-Cities-Places/PLACES-Local-Data-for-Better-Health-Census-Tract-D/cwsq-ngmh
+
+Jones, Andrew D."Food Insecurity and Mental Health Status: A Global Analysis of 149 Countries." American Journal of Preventative Medicine 53, no. 2 (2017): 264-273. doi: https://doi.org/10.1016/j.amepre.2017.04.008
+
+Kaiser ML, Dionne J, Carr JK. "Predictors of Diet-Related Health Outcomes in Food-Secure and Food-Insecure Communities." Soc Work Public Health 34, no.3 (2019):214-229. doi: 10.1080/19371918.2019.1575313. Epub 2019 Feb 15. PMID: 30767652.
+
+Seligman, Hilary K., and Dean Schillinger. "Hunger and Socioeconomic Disparities in Chronic Disease." The New England Journal of Medicine 363, no. 1 (2010): 6-9.
+
+United States Census Bureau. American Community Survey, 5-year estimates. 2019.
+
+United States Census Bureau. 2010.
+
+United States Department of Agriculture. "Food Access Research Atlas". 2019. "https://www.ers.usda.gov/data-products/food-access-research-atlas/download-the-data/"
