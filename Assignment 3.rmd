@@ -48,7 +48,8 @@ library(gridExtra)
 
 ## Load Data Table
 ```{r, message = FALSE, warning = FALSE}
-data <- "data table.csv"
+load(file = "data table.rdata")
+data <- "data table.rdata"
 ```
 This dataset includes 72,351 census tracts across the United States.
 
