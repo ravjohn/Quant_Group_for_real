@@ -181,8 +181,6 @@ data <- left_join(USDA, Mental_Health) %>%
   left_join(acsMedIncome)
 
 kable(head(data))
-
-write.csv(data,"data table.csv", row.names = TRUE)
 ```
 This dataset includes 72,351 census tracts across the United States.
 
