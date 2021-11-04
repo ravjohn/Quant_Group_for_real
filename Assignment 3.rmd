@@ -23,7 +23,6 @@ Categorical
 
 * Access to food options within 1 mile urban or 10 miles rural
 * Education
-* Race
 * Mental Health Outcomes
 
 Continuous
@@ -33,6 +32,7 @@ Continuous
 * Median income
 * Pct households with children
 * Age
+* Race
 
 # Load Data
 ```{r, message = FALSE, results = FALSE, warning = FALSE}
@@ -442,6 +442,54 @@ ggplot(cat_summary_Ed) +
                      labels = c("0", "20%", "40%", "60%", "80%")) +
   theme_bw()
 ```
+
+# Bivariate Analysis
+The continuous variable we are testing as dependent is mental health.
+
+## Continuous-Continuous Correlation Test
+
+### Age - Jack
+```{r}
+
+```
+
+### Median Income - Alanna
+```{r}
+
+```
+
+### Poverty Rate - Alanna
+```{r}
+
+```
+
+### Percent of Households using SNAP - Jack
+```{r}
+
+```
+
+### Percent of Households with Children - Raveena
+```{r}
+
+```
+
+### Race - Raveena
+```{r}
+
+```
+
+## Continuous-Categorical Difference in Means Test
+
+### Access to Food Options - Alanna
+```{r}
+
+```
+
+### Education - Raveena
+```{r}
+
+```
+
 
 
 # References
