@@ -159,16 +159,12 @@ acsMedIncome<- get_acs(geography = "tract",
 ## CDC - PLACES - 2018
 * Mental Health Outcomes (Mental health not good for >=14 days among adults aged >=18 years)
 ```{r, message = FALSE, results = FALSE, warning = FALSE}
-Mental_Health <- read_csv("data/PLACES__Local_Data_for_Better_Health__Census_Tract_Data_2020_release.csv") %>%
+Mental_Health <- read_csv("PLACES__Local_Data_for_Better_Health__Census_Tract_Data_2020_release (1).csv") %>%
   filter(Year == 2018) %>%
   filter(Short_Question_Text == "Mental Health") %>%
   rename(GEOID = LocationID) %>%
   group_by(GEOID) %>%
-  select(GEOID, StateAbbr, Measure, Data_Value, Data_Value_Unit)
-
-
-Mental_Health$Catg <- cut(Mental_Health$Data_Value, breaks = c(0, 5, 10, 15, 20, 30, 35, Inf),
-                  labels = c("very low", "low", "moderate", "signficant", "high", "very high", "critical level"))
+  select(GEOID, Data_Value)
 
 
 
