@@ -473,7 +473,7 @@ pretty_MentalHealth_hist <- MentalHealth_hist +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, pretty_RAI_hist, pretty_RAsian_hist, pretty_ROther_hist, pretty_RTwoPlus_hist, pretty_age_hist, pretty_pov_hist, pretty_SNAP_hist, pretty_income_hist, pretty_MentalHealth_hist,
-             ncol = 3)
+             ncol = 2)
 ```
 
 

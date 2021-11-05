@@ -48,7 +48,8 @@ library(gridExtra)
 
 ## Load Data Table
 ```{r, message = FALSE, warning = FALSE}
-data <- "data table.csv"
+load(file = "data table.rdata")
+data <- "data table.rdata"
 ```
 This dataset includes 72,351 census tracts across the United States.
 
@@ -450,8 +451,11 @@ The continuous variable we are testing as dependent is mental health.
 
 ### Age - Jack
 ```{r}
+cor.test(~ Data_Value + MedAge, data = data)
 
+age_model <- lm(Data_Value ~ MedAge, data = data)
 ```
+The correlation for mental health and median age is -0.4883118, and the 95% confidence interval is below zero. This means that we can say with 95% confidence that higher median age is related to lower mental health.
 
 ### Median Income - Alanna
 ```{r}
@@ -465,8 +469,11 @@ The continuous variable we are testing as dependent is mental health.
 
 ### Percent of Households using SNAP - Jack
 ```{r}
+cor.test(~ Data_Value + pct_SNAP, data = data)
 
+SNAP_model <- lm(Data_Value ~ pct_SNAP, data = data)
 ```
+The correlation for mental health and percent of households using SNAP is 0.6922096, and the 95% confidence interval is above zero. This means that we can say with 95% confidence that higher SNAP usage is related to better mental health.
 
 ### Percent of Households with Children - Raveena
 ```{r}
