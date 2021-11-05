@@ -49,7 +49,15 @@ library(gridExtra)
 ## Load Data Table
 ```{r, message = FALSE, warning = FALSE}
 load(file = "data table.rdata")
-data <- "data table.rdata"
+
+data <- data %>%
+  mutate(pct_PMH = Data_Value /100) %>%
+  subset(select = -c(Data_Value, Data_Value_Unit))
+  
+  
+  
+  
+
 ```
 This dataset includes 72,351 census tracts across the United States.
 
@@ -460,7 +468,12 @@ The correlation for mental health and median age is -0.4883118, and the 95% conf
 ### Median Income - Alanna
 ```{r}
 
+cor.test(~ pct_PMH + MedIncomeE, data = data)
+
+MedIncome_model <- lm(pct_PMH ~ MedIncomeE, data = data)
+
 ```
+The correlation for mental health and median income is -0.7605683 and the 95% confidence interval is below zero. This indicates we can say with 95% confidence that higher income is related to lower mental health.
 
 ### Poverty Rate - Alanna
 ```{r}
