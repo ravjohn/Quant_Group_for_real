@@ -467,18 +467,22 @@ The correlation for mental health and median age is -0.4883118, and the 95% conf
 
 ### Median Income - Alanna
 ```{r}
-
 cor.test(~ pct_PMH + MedIncomeE, data = data)
 
 MedIncome_model <- lm(pct_PMH ~ MedIncomeE, data = data)
 
 ```
-The correlation for mental health and median income is -0.7605683 and the 95% confidence interval is below zero. This indicates we can say with 95% confidence that higher income is related to lower mental health.
+The correlation for mental health and median income is -0.7605683 and the 95% confidence interval is below zero. 
 
 ### Poverty Rate - Alanna
 ```{r}
+cor.test(~ pct_PMH + PovertyRate, data = data)
+
+MedIncome_model <- lm(pct_PMH ~ PovertyRate, data = data)
 
 ```
+The correlation for mental health and median income is 0.8124621 and the 95% confidence interval is above zero.
+
 
 ### Percent of Households using SNAP - Jack
 ```{r}
