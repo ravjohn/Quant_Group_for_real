@@ -349,7 +349,7 @@ cont_summary <- tibble(
                     pov_t_test$conf.int[2],
                     SNAP_t_test$conf.int[2] *100,
                     income_t_test$conf.int[2],
-                    MentalHealth_t_test$conf.int[2]),
+                    MentalHealth_t_test$conf.int[2] *100),
     Median = c(children_quartiles[3] * 100,
                     RWhite_quartiles[3] * 100,
                     RBlack_quartiles[3] * 100,
