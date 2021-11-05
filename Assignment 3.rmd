@@ -54,10 +54,7 @@ data <- data %>%
   mutate(pct_PMH = Data_Value /100) %>%
   subset(select = -c(Data_Value, Data_Value_Unit))
   
-  
-  
-  
-
+kable(head(data))
 ```
 This dataset includes 72,351 census tracts across the United States.
 
@@ -66,11 +63,11 @@ This dataset includes 72,351 census tracts across the United States.
 
 ### Mental Health
 ```{r}
-MentalHealth_t_test <- t.test(Mental_Health$Data_Value)
-MentalHealth_quartiles <- quantile(Mental_Health$Data_Value, na.rm = TRUE)
-MentalHealth_st_dev <- sd(Mental_Health$Data_Value, na.rm = TRUE)
-MentalHealth_hist <- ggplot(Mental_Health) +
-  geom_histogram(aes(x = Data_Value),
+MentalHealth_t_test <- t.test(data$pct_PMH)
+MentalHealth_quartiles <- quantile(data$pct_PMH, na.rm = TRUE)
+MentalHealth_st_dev <- sd(data$pct_PMH, na.rm = TRUE)
+MentalHealth_hist <- ggplot(data) +
+  geom_histogram(aes(x = pct_PMH),
                  bins = 30)
 ```
 
@@ -136,10 +133,10 @@ RTwoPlus_hist <- ggplot(data) +
 
 ### Poverty Rate
 ```{r}
-pov_t_test <- t.test(USDA$PovertyRate)
-pov_quartiles <- quantile(USDA$PovertyRate, na.rm = TRUE)
-pov_st_dev <- sd(USDA$PovertyRate, na.rm = TRUE)
-pov_hist <- ggplot(USDA) +
+pov_t_test <- t.test(data$PovertyRate)
+pov_quartiles <- quantile(data$PovertyRate, na.rm = TRUE)
+pov_st_dev <- sd(data$PovertyRate, na.rm = TRUE)
+pov_hist <- ggplot(data) +
   geom_histogram(aes(x = PovertyRate),
                  bins = 30)
 ```
@@ -180,7 +177,7 @@ age_hist <- ggplot(data) +
 ### Results for Continuous Variables
 ```{r, warning = FALSE}
 cont_summary <- tibble(
-  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More", "Median Age","Poverty Rate", "Percent Households SNAP", "Median Income", "Poor Mental Health for 14 days or more"),
+  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More", "Median Age","Poverty Rate", "Percent Households SNAP", "Median Income", "Pct of Census Tract with Poor Mental Health for 14 days or more"),
   `Sample mean` = c(children_t_test$estimate * 100,
                     RWhite_t_test$estimate * 100,
                     RBlack_t_test$estimate * 100,
