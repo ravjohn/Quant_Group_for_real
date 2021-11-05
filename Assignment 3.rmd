@@ -463,7 +463,7 @@ cor.test(~ pct_PMH + MedAge, data = data)
 
 age_model <- lm(pct_PMH ~ MedAge, data = data)
 ```
-The correlation for mental health and median age is -0.4883118 and the 95% confidence interval is below zero.
+The correlation for mental health and median age is -0.4883118 and the 95% confidence interval is below zero. We can say with 95% confidence that an increase in median age correlates with an decrease in poor mental health outcomes.
 
 ### Median Income - Alanna
 ```{r}
@@ -490,7 +490,7 @@ cor.test(~ pct_PMH + pct_SNAP, data = data)
 
 SNAP_model <- lm(pct_PMH ~ pct_SNAP, data = data)
 ```
-The correlation for mental health and percent of households using SNAP is 0.6922096, and the 95% confidence interval is above zero.
+The correlation for mental health and percent of households using SNAP is 0.6922096, and the 95% confidence interval is above zero. We can say with 95% confidence that an increase in households using SNAP correlates with an increase in poor mental health outcomes.
 
 ### Percent of Households with Children - Raveena
 ```{r}
