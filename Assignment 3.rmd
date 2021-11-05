@@ -22,7 +22,7 @@ The sample population for this study is the full set of all census tracts in the
 Categorical
 
 * Access to food options within 1 mile urban or 10 miles rural
-* Education
+* Education, most common attainment per census tract
 * Mental Health Outcomes
 
 Continuous
@@ -494,13 +494,75 @@ The correlation for mental health and percent of households using SNAP is 0.6922
 
 ### Percent of Households with Children - Raveena
 ```{r}
+cor.test(~ pct_PMH + pct_UnitsWChildren, data = data)
 
+UnitsWChildren_model <- lm(pct_PMH ~ pct_UnitsWChildren, data = data)
 ```
+The correlation for poor mental health and percent of homes with children is 0.1768382 and the 95% confidence interval is all positive numbers, which means we can say with 95% certainty that there is an increase in percent of people with poor mental health days as the percent of homes with children in a census tract increases. The p-value is 2.2e-16 (the lowest number R will provide), which means it is very unlikely this pattern would appear if the variables were not correlated. 
 
 ### Race - Raveena
 ```{r}
 
+RWhite_corr <- cor.test(~ pct_PMH + pct_RWhite, data = data)
+RBlack_corr <- cor.test(~ pct_PMH + pct_RBlack, data = data)
+RAI_corr <- cor.test(~ pct_PMH + pct_RAI, data = data)
+RAsian_corr <- cor.test(~ pct_PMH + pct_RAsian, data = data)
+RNH_corr <- cor.test(~ pct_PMH + pct_RNH, data = data)
+ROther_corr <- cor.test(~ pct_PMH + pct_ROther, data = data)
+RTwoPlus_corr <- cor.test(~ pct_PMH + pct_RTwoPlus, data = data)
+
+Race_corr_summary <- tibble(`Race` = 
+                              c("White",
+                                "Black",
+                                "AI/AN",
+                                "Asian",
+                                "Hawiian",
+                                "Other",
+                                "Two or More"),
+                            `Correlation Estimate` =
+                              c(RWhite_corr$estimate,
+                                RBlack_corr$estimate,
+                                RAI_corr$estimate,
+                                RAsian_corr$estimate,
+                                RNH_corr$estimate,
+                                ROther_corr$estimate,
+                                RTwoPlus_corr$estimate),
+                            `95% Confidence Interval, low` =
+                               c(RWhite_corr$conf.int[1],
+                                RBlack_corr$conf.int[1],
+                                RAI_corr$conf.int[1],
+                                RAsian_corr$conf.int[1],
+                                RNH_corr$conf.int[1],
+                                ROther_corr$conf.int[1],
+                                RTwoPlus_corr$conf.int[1]),
+                            `95% Confidence Interval, high` =
+                               c(RWhite_corr$conf.int[2],
+                                RBlack_corr$conf.int[2],
+                                RAI_corr$conf.int[2],
+                                RAsian_corr$conf.int[2],
+                                RNH_corr$conf.int[2],
+                                ROther_corr$conf.int[2],
+                                RTwoPlus_corr$conf.int[2]),                                                        `p-value` =
+                                c(RWhite_corr$p.value,
+                                  RBlack_corr$p.value,
+                                  RAI_corr$p.value,
+                                  RAsian_corr$p.value,
+                                  RNH_corr$p.value,
+                                  ROther_corr$p.value,
+                                  RTwoPlus_corr$p.value))
+
+kable(Race_corr_summary)
+
+RWhite_model <- lm(pct_PMH ~ pct_RWhite, data = data)
+RBlack_model <- lm(pct_PMH ~ pct_RBlack, data = data)
+RAI_model <- lm(pct_PMH ~ pct_RAI, data = data)
+RAsian_model <- lm(pct_PMH ~ pct_RAsian, data = data)
+RNH_model <- lm(pct_PMH ~ pct_RNH, data = data)
+ROther_model <- lm(pct_PMH ~ pct_ROther, data = data)
+RTwoPlus_model <- lm(pct_PMH ~ pct_RTwoPlus, data = data)
 ```
+The results of correlation tests between the percent of poor mental health days and the racial demographic data are summarized in this table. All p values are low enough to be 95% confident in the correlation of racial demographics and mental health reporting. The confidence interval values for each variable are either both negative or both positive, so the correlation estimate cannot be zero within 95% confidence. Correlation estimates are positive for American Indian & Alaska Native, Asian, and Two or More, meaning as the percentages of these populations increase within a census tract the percentage of individuals experiencing poor mental health days is expected to increase. Correlation estimates are negative for White, Black, Native Hawaiian, and Other, meaning poor mental health days decrease as the percentage of these populations increase. It is worth noting here that the Two or More and Other categories are broad enough to provide little value to this analysis, but we have included them out of curiosity.
+
 
 ## Continuous-Categorical Difference in Means Test
 
@@ -511,7 +573,13 @@ The correlation for mental health and percent of households using SNAP is 0.6922
 
 ### Education - Raveena
 ```{r}
+data <- data %>%
+  mutate(MaxEd = as.factor(MaxEd)) %>%
+  mutate(MaxEd = relevel(MaxEd, "High School"))
 
+MaxEd_model <- lm(pct_PMH ~ MaxEd, data)
+
+summary(MaxEd_model)
 ```
 
 
