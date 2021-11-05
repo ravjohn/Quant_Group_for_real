@@ -167,6 +167,10 @@ Mental_Health <- read_csv("PLACES__Local_Data_for_Better_Health__Census_Tract_Da
   select(GEOID, Data_Value)
 
 
+Mental_Health <- Mental_Health %>%
+  mutate(pct_PMH = Data_Value / 100) %>%
+  select(GEOID, pct_PMH)
+
 
 ```
 
@@ -189,12 +193,13 @@ This dataset includes 72,351 census tracts across the United States.
 
 ### Mental Health
 ```{r}
-MentalHealth_t_test <- t.test(Mental_Health$Data_Value)
-MentalHealth_quartiles <- quantile(Mental_Health$Data_Value, na.rm = TRUE)
-MentalHealth_st_dev <- sd(Mental_Health$Data_Value, na.rm = TRUE)
+MentalHealth_t_test <- t.test(Mental_Health$pct_PMH)
+MentalHealth_quartiles <- quantile(Mental_Health$pct_PMH, na.rm = TRUE)
+MentalHealth_st_dev <- sd(Mental_Health$pct_PMH, na.rm = TRUE)
 MentalHealth_hist <- ggplot(Mental_Health) +
-  geom_histogram(aes(x = Data_Value),
+  geom_histogram(aes(x = pct_PMH),
                  bins = 30)
+
 ```
 
 ### Percent Households with Children
