@@ -1,7 +1,7 @@
 ---
 title: "Assignment 3"
 author: "Raveena, Alanna, Jack"
-date: "11/11/2021"
+date: "11/08/2021"
 output: 
   html_document:
     theme: readable
@@ -454,7 +454,7 @@ The continuous variable we are testing as dependent is mental health.
 
 ## Continuous-Continuous Correlation Test
 
-### Age - Jack
+### Age
 ```{r}
 cor.test(~ pct_PMH + MedAge, data = data)
 
@@ -462,7 +462,7 @@ age_model <- lm(pct_PMH ~ MedAge, data = data)
 ```
 The correlation for mental health and median age is -0.4883118 and the 95% confidence interval is below zero. We can say with 95% confidence that an increase in median age correlates with an decrease in poor mental health outcomes.
 
-### Median Income - Alanna
+### Median Income
 ```{r}
 cor.test(~ pct_PMH + MedIncomeE, data = data)
 
@@ -472,7 +472,7 @@ MedIncome_model <- lm(pct_PMH ~ MedIncomeE, data = data)
 The correlation for mental health and median income is -0.7605683 and the 95% confidence interval is below zero. This indicates we can say with 95% that there is a negative correlation between mental health and median incom. As the median income increases within a census track, the percent of adults reporting poor mental health decreases. 
 
 
-### Poverty Rate - Alanna
+### Poverty Rate
 ```{r}
 cor.test(~ pct_PMH + PovertyRate, data = data)
 
@@ -483,7 +483,7 @@ MedIncome_model <- lm(pct_PMH ~ PovertyRate, data = data)
 The correlation for mental health and poverty rate is 0.8124621 and the 95% confidence interval is above zero. This indicates we can say with 95% that there is a correlation between mental health and a census track's poverty rate. As the percent of poverty increases, so does the percent of adults reporting poor mental health.  
 
 
-### Percent of Households using SNAP - Jack
+### Percent of Households using SNAP
 ```{r}
 cor.test(~ pct_PMH + pct_SNAP, data = data)
 
@@ -491,7 +491,7 @@ SNAP_model <- lm(pct_PMH ~ pct_SNAP, data = data)
 ```
 The correlation for mental health and percent of households using SNAP is 0.6922096, and the 95% confidence interval is above zero. We can say with 95% confidence that an increase in households using SNAP correlates with an increase in poor mental health outcomes.
 
-### Percent of Households with Children - Raveena
+### Percent of Households with Children
 ```{r}
 cor.test(~ pct_PMH + pct_UnitsWChildren, data = data)
 
@@ -499,7 +499,7 @@ UnitsWChildren_model <- lm(pct_PMH ~ pct_UnitsWChildren, data = data)
 ```
 The correlation for poor mental health and percent of homes with children is 0.1768382 and the 95% confidence interval is all positive numbers, which means we can say with 95% certainty that there is an increase in percent of people with poor mental health days as the percent of homes with children in a census tract increases. The p-value is 2.2e-16 (the lowest number R will provide), which means it is very unlikely this pattern would appear if the variables were not correlated. 
 
-### Race - Raveena
+### Race
 ```{r}
 
 RWhite_corr <- cor.test(~ pct_PMH + pct_RWhite, data = data)
@@ -565,7 +565,7 @@ The results of correlation tests between the percent of poor mental health days 
 
 ## Continuous-Categorical Difference in Means Test
 
-### Access to Food Options - Alanna
+### Access to Food Options
 ```{r}
 
 cor.test(~ pct_PMH + LA1and10, data = data)
@@ -576,7 +576,7 @@ summary(FoodAccess_model)
 ```
 The p-value mental health and food access is < 2.2e-16, the lowest p value amount, indicating the relationship is significant and the 95% confidence interval does not include zero. We can say with 95% that there is a correlation between mental health and a census block's proximity to food. We can predict that census block's with access to food within 1 mile have a lower percent of adults reporting poor mental health.
 
-### Education - Raveena
+### Education
 ```{r}
 data <- data %>%
   mutate(MaxEd = as.factor(MaxEd)) %>%
