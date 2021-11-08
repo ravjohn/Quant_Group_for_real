@@ -11,7 +11,7 @@
 
 <meta name="author" content="Raveena, Alanna, Jack" />
 
-<meta name="date" content="2021-11-11" />
+<meta name="date" content="2021-11-08" />
 
 <title>Assignment 3</title>
 
@@ -243,7 +243,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Assignment 3</h1>
 <h4 class="author">Raveena, Alanna, Jack</h4>
-<h4 class="date">11/11/2021</h4>
+<h4 class="date">11/08/2021</h4>
 
 </div>
 
@@ -1066,8 +1066,8 @@ kable(cat_summary_Ed, digits = 0)</code></pre>
 <p>The continuous variable we are testing as dependent is mental health.</p>
 <div id="continuous-continuous-correlation-test" class="section level2">
 <h2>Continuous-Continuous Correlation Test</h2>
-<div id="age---jack" class="section level3">
-<h3>Age - Jack</h3>
+<div id="age-1" class="section level3">
+<h3>Age</h3>
 <pre class="r"><code>cor.test(~ pct_PMH + MedAge, data = data)</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation
@@ -1083,8 +1083,8 @@ kable(cat_summary_Ed, digits = 0)</code></pre>
 <pre class="r"><code>age_model &lt;- lm(pct_PMH ~ MedAge, data = data)</code></pre>
 <p>The correlation for mental health and median age is -0.4883118 and the 95% confidence interval is below zero. We can say with 95% confidence that an increase in median age correlates with an decrease in poor mental health outcomes.</p>
 </div>
-<div id="median-income---alanna" class="section level3">
-<h3>Median Income - Alanna</h3>
+<div id="median-income-1" class="section level3">
+<h3>Median Income</h3>
 <pre class="r"><code>cor.test(~ pct_PMH + MedIncomeE, data = data)</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation
@@ -1098,10 +1098,10 @@ kable(cat_summary_Ed, digits = 0)</code></pre>
 ##        cor 
 ## -0.7605683</code></pre>
 <pre class="r"><code>MedIncome_model &lt;- lm(pct_PMH ~ MedIncomeE, data = data)</code></pre>
-<p>The correlation for mental health and median income is -0.7605683 and the 95% confidence interval is below zero.</p>
+<p>The correlation for mental health and median income is -0.7605683 and the 95% confidence interval is below zero. This indicates we can say with 95% that there is a negative correlation between mental health and median incom. As the median income increases within a census track, the percent of adults reporting poor mental health decreases.</p>
 </div>
-<div id="poverty-rate---alanna" class="section level3">
-<h3>Poverty Rate - Alanna</h3>
+<div id="poverty-rate-1" class="section level3">
+<h3>Poverty Rate</h3>
 <pre class="r"><code>cor.test(~ pct_PMH + PovertyRate, data = data)</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation
@@ -1115,10 +1115,10 @@ kable(cat_summary_Ed, digits = 0)</code></pre>
 ##       cor 
 ## 0.8124621</code></pre>
 <pre class="r"><code>MedIncome_model &lt;- lm(pct_PMH ~ PovertyRate, data = data)</code></pre>
-<p>The correlation for mental health and median income is 0.8124621 and the 95% confidence interval is above zero.</p>
+<p>The correlation for mental health and poverty rate is 0.8124621 and the 95% confidence interval is above zero. This indicates we can say with 95% that there is a correlation between mental health and a census track’s poverty rate. As the percent of poverty increases, so does the percent of adults reporting poor mental health.</p>
 </div>
-<div id="percent-of-households-using-snap---jack" class="section level3">
-<h3>Percent of Households using SNAP - Jack</h3>
+<div id="percent-of-households-using-snap" class="section level3">
+<h3>Percent of Households using SNAP</h3>
 <pre class="r"><code>cor.test(~ pct_PMH + pct_SNAP, data = data)</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation
@@ -1134,8 +1134,8 @@ kable(cat_summary_Ed, digits = 0)</code></pre>
 <pre class="r"><code>SNAP_model &lt;- lm(pct_PMH ~ pct_SNAP, data = data)</code></pre>
 <p>The correlation for mental health and percent of households using SNAP is 0.6922096, and the 95% confidence interval is above zero. We can say with 95% confidence that an increase in households using SNAP correlates with an increase in poor mental health outcomes.</p>
 </div>
-<div id="percent-of-households-with-children---raveena" class="section level3">
-<h3>Percent of Households with Children - Raveena</h3>
+<div id="percent-of-households-with-children" class="section level3">
+<h3>Percent of Households with Children</h3>
 <pre class="r"><code>cor.test(~ pct_PMH + pct_UnitsWChildren, data = data)</code></pre>
 <pre><code>## 
 ##  Pearson&#39;s product-moment correlation
@@ -1151,8 +1151,8 @@ kable(cat_summary_Ed, digits = 0)</code></pre>
 <pre class="r"><code>UnitsWChildren_model &lt;- lm(pct_PMH ~ pct_UnitsWChildren, data = data)</code></pre>
 <p>The correlation for poor mental health and percent of homes with children is 0.1768382 and the 95% confidence interval is all positive numbers, which means we can say with 95% certainty that there is an increase in percent of people with poor mental health days as the percent of homes with children in a census tract increases. The p-value is 2.2e-16 (the lowest number R will provide), which means it is very unlikely this pattern would appear if the variables were not correlated.</p>
 </div>
-<div id="race---raveena" class="section level3">
-<h3>Race - Raveena</h3>
+<div id="race-1" class="section level3">
+<h3>Race</h3>
 <pre class="r"><code>RWhite_corr &lt;- cor.test(~ pct_PMH + pct_RWhite, data = data)
 RBlack_corr &lt;- cor.test(~ pct_PMH + pct_RBlack, data = data)
 RAI_corr &lt;- cor.test(~ pct_PMH + pct_RAI, data = data)
@@ -1283,11 +1283,34 @@ RTwoPlus_model &lt;- lm(pct_PMH ~ pct_RTwoPlus, data = data)</code></pre>
 </div>
 <div id="continuous-categorical-difference-in-means-test" class="section level2">
 <h2>Continuous-Categorical Difference in Means Test</h2>
-<div id="access-to-food-options---alanna" class="section level3">
-<h3>Access to Food Options - Alanna</h3>
+<div id="access-to-food-options" class="section level3">
+<h3>Access to Food Options</h3>
+<pre class="r"><code>FoodAccess_model &lt;- lm(pct_PMH ~ LA1and10, data = data)
+summary(FoodAccess_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = pct_PMH ~ LA1and10, data = data)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.088892 -0.024892 -0.003565  0.020435  0.210108 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.1448920  0.0001603  904.10   &lt;2e-16 ***
+## LA1and10    -0.0063272  0.0002600  -24.33   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.03394 on 72328 degrees of freedom
+##   (196 observations deleted due to missingness)
+## Multiple R-squared:  0.00812,    Adjusted R-squared:  0.008106 
+## F-statistic: 592.1 on 1 and 72328 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The p-value for mental health and food access is &lt; 2.2e-16, the lowest p value amount, indicating the relationship is significant and the confidence intervals are both 95%. The correlation estimate is negative indicating we can expect both urban and rural census blocks with access to food* to have a lower percentage of adults reporting poor mental health.</p>
+<p>*The USDA defines urban census blocks within 1 mile of food and rural census blocks within 10 miles of food as having food access.</p>
 </div>
-<div id="education---raveena" class="section level3">
-<h3>Education - Raveena</h3>
+<div id="education-1" class="section level3">
+<h3>Education</h3>
 <pre class="r"><code>data &lt;- data %&gt;%
   mutate(MaxEd = as.factor(MaxEd)) %&gt;%
   mutate(MaxEd = relevel(MaxEd, &quot;High School&quot;))
@@ -1319,6 +1342,7 @@ summary(MaxEd_model)</code></pre>
 ##   (396 observations deleted due to missingness)
 ## Multiple R-squared:  0.3165, Adjusted R-squared:  0.3164 
 ## F-statistic:  5565 on 6 and 72123 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The most common educational attainment among the census tracts is high school, so this analysis uses high school as the baseline of comparison for the other categorical values. All variables have low p-values, so the confidence intervals are 95% for each. The categories of high school, associates, and GED have positive correlation estimates, census tracts in which these are the most common educational attainment are likely to have higher rates of poor mental health. Conversely, bachelors, masters, professional, and doctorate degrees have negative correlation estimates, so poor mental health rates are expected to decrease in tracts in which these are the most commonly attained levels of education.</p>
 </div>
 </div>
 </div>
