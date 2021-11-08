@@ -567,14 +567,13 @@ The results of correlation tests between the percent of poor mental health days 
 
 ### Access to Food Options
 ```{r}
-
-cor.test(~ pct_PMH + LA1and10, data = data)
-
 FoodAccess_model <- lm(pct_PMH ~ LA1and10, data = data)
 summary(FoodAccess_model)
 
 ```
-The p-value mental health and food access is < 2.2e-16, the lowest p value amount, indicating the relationship is significant and the 95% confidence interval does not include zero. We can say with 95% that there is a correlation between mental health and a census block's proximity to food. We can predict that census block's with access to food within 1 mile have a lower percent of adults reporting poor mental health.
+The p-value for mental health and food access is < 2.2e-16, the lowest p value amount, indicating the relationship is significant and the confidence intervals are both 95%. The correlation estimate is negative indicating we can expect both urban and rural census blocks with access to food* to have a lower percentage of adults reporting poor mental health. 
+
+*The USDA defines urban census blocks within 1 mile of food and rural census blocks within 10 miles of food as having food access.
 
 ### Education
 ```{r}
