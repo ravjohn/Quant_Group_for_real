@@ -586,7 +586,7 @@ MaxEd_model <- lm(pct_PMH ~ MaxEd, data)
 
 summary(MaxEd_model)
 ```
-
+The most common educational attainment among the census tracts is high school, so this analysis uses high school as the baseline of comparison for the other categorical values. All variables have low p-values, so the confidence intervals are 95% for each. The categories of high school, associates, and GED have positive correlation estimates, census tracts in which these are the most common educational attainment are likely to have higher rates of poor mental health. Conversely, bachelors, masters, professional, and doctorate degrees have negative correlation estimates, so poor mental health rates are expected to decrease in tracts in which these are the most commonly attained levels of education.
 
 
 # References
