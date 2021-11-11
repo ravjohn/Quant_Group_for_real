@@ -607,6 +607,8 @@ summary(full_model2)
 ```
 Start with summary of variables that affect correlation. Then mention significance. Then detail variables.
 
+The model's R squared value is 0.843, so this combination of independent variables explains 84% of the variation in percent of population experiencing poor mental health for more than 14 days.
+
 Positive Correlation:
 As percent SNAP usage, Poverty Rate, etc. increase, pct_PMH increases.
 
@@ -618,13 +620,7 @@ Holding all else constant, a $10,000 increase in median income is associated wit
 
 
 (? Intercept describing two categorical variables?)
-
-1 not defined beceause of singularities - Two or More Races is almost perfectly correlated with another data point. Could combine ROther and RTwoPlus
-
-The model's R squared value is 0.843, so this combination of independent variables explains 84% of the variation in percent of population experiencing poor mental health for more than 14 days.
-
-MaxEdProfessional 
-
+1 not defined beceause of singularities - Two or More Races is almost perfectly correlated with another data point. Try to combine ROther and RTwoPlus
 
 # References
 Ahern, Melissa, Brown, Cheryl, Dukas, Stephen. "A National Study of the Association Between Food Environments and County-Level Health Outcomes." The Journal of Rural Health 27, no. 4 (2011): 367-379. doi: https://doi.org/10.1111/j.1748-0361.2011.00378.x
