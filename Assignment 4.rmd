@@ -587,6 +587,44 @@ summary(MaxEd_model)
 ```
 The most common educational attainment among the census tracts is high school, so this analysis uses high school as the baseline of comparison for the other categorical values. All variables have low p-values, so the confidence intervals are 95% for each. The categories of high school, associates, and GED have positive correlation estimates, census tracts in which these are the most common educational attainment are likely to have higher rates of poor mental health. Conversely, bachelors, masters, professional, and doctorate degrees have negative correlation estimates, so poor mental health rates are expected to decrease in tracts in which these are the most commonly attained levels of education.
 
+# Multivariate Regression
+```{r}
+full_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_ROther + pct_RTwoPlus+ LA1and10 + MaxEd, data)
+
+summary(full_model)
+```
+## Combine RTwoPlus and ROther
+```{r}
+data <- data %>%
+  mutate(pct_RTPO = pct_RTwoPlus + pct_ROther)
+```
+
+## Run regression with pct_RTPO variable
+```{r}
+full_model2 <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTPO + LA1and10 + MaxEd, data)
+
+summary(full_model2)
+```
+Start with summary of variables that affect correlation. Then mention significance. Then detail variables.
+
+Positive Correlation:
+As percent SNAP usage, Poverty Rate, etc. increase, pct_PMH increases.
+
+Holding all else constant, with a 1% increase in pct_SNAP, pct_PMH increases by 0.0177%.
+Holding all else constant, with a 1% increase in Poverty Rate, pct_PMH increases by 0.001386%.
+
+Negative Correlation
+Holding all else constant, a $10,000 increase in median income is associated with a decrease in pct_PMH by 0.006253%.
+
+
+(? Intercept describing two categorical variables?)
+
+1 not defined beceause of singularities - Two or More Races is almost perfectly correlated with another data point. Could combine ROther and RTwoPlus
+
+The model's R squared value is 0.843, so this combination of independent variables explains 84% of the variation in percent of population experiencing poor mental health for more than 14 days.
+
+MaxEdProfessional 
+
 
 # References
 Ahern, Melissa, Brown, Cheryl, Dukas, Stephen. "A National Study of the Association Between Food Environments and County-Level Health Outcomes." The Journal of Rural Health 27, no. 4 (2011): 367-379. doi: https://doi.org/10.1111/j.1748-0361.2011.00378.x
