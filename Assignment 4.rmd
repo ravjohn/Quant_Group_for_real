@@ -589,38 +589,50 @@ The most common educational attainment among the census tracts is high school, s
 
 # Multivariate Regression
 ```{r}
-full_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_ROther + pct_RTwoPlus+ LA1and10 + MaxEd, data)
+full_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, data)
 
 summary(full_model)
 ```
-## Combine RTwoPlus and ROther
-```{r}
-data <- data %>%
-  mutate(pct_RTPO = pct_RTwoPlus + pct_ROther)
-```
 
-## Run regression with pct_RTPO variable
-```{r}
-full_model2 <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTPO + LA1and10 + MaxEd, data)
+Overview
+We ran a multivariate linear regression of the independent variables in this analysis to examine their effects on the percent of people experiencing fourteen or more poor mental health days per year, across the United States at the scale of the census tract. The independent variables included are percent of population utilizing SNAP benefits, poverty rate, median income, median age, percent of households with children, if the census tract has high access to food (based on 1 mile for urban areas and 10 miles for rural areas), the most common highest educational attainment within the census tract, and the percent of population that identify as one of the following racial categories: white, Black, American Indian/Alaska Native, Asian, Native Hawiian, or two or more. The racial category of “other” was excluded from the regression to avoid a singularity, since all of the racial categories would add up to 100%. This would yield multicollinearity such that the regression would not be completed for all racial demographic variables. We chose to exclude “other” since it revealed the least information, as it is the broadest grouping within this part of the census.
 
-summary(full_model2)
-```
-Start with summary of variables that affect correlation. Then mention significance. Then detail variables.
+Of the independent variables included, all but the Professional Degree education category are significant within the 95% confidence interval. The High School education category and Native Hawiian racial percentage are significant, but have p-values of 0.031512 and 0.002276, respectively, which are much closer to the 95% interval than the other variables. SNAP usage, poverty rate, median income, median age, percent of households with children, and tracts where a Bachelor’s degree is the most common level of educational attainment are the variables with the lowest p-values, as close to 0 as R will compute.
 
-The model's R squared value is 0.843, so this combination of independent variables explains 84% of the variation in percent of population experiencing poor mental health for more than 14 days.
+The model's R squared value is 0.843, so this combination of independent variables explains 84% of the variation in percent of population experiencing poor mental health for more than 14 days. This is a high R squared value, which could suggest that poor mental health is well predicted by the independent variables we included in this regression. Other independent variables to consider including to explain the remaining variation could be homeownership rates, physical health outcomes, and health care access.
+
 
 Positive Correlation:
-As percent SNAP usage, Poverty Rate, etc. increase, pct_PMH increases.
+The following summary assumes that all other variables are held constant, except for the independent variable in question:
 
-Holding all else constant, with a 1% increase in pct_SNAP, pct_PMH increases by 0.0177%.
-Holding all else constant, with a 1% increase in Poverty Rate, pct_PMH increases by 0.001386%.
+A 1% increase in SNAP utilization is associated with a 0.0177% increase in the percent of adults experiencing poor mental health for more than 14 days. SNAP is a food stamp program that assists low-income individuals, so higher SNAP utilization may indicate lower financial security resulting in poor mental health.
 
-Negative Correlation
-Holding all else constant, a $10,000 increase in median income is associated with a decrease in pct_PMH by 0.006253%.
+A 1% increase in Poverty Rate is associated with a 0.001386% increase in the percent of adults experiencing poor mental health for more than 14 days. This increase in Poverty Rate indicates lower financial security that also results in poor mental health.
+
+A 1% increase in Units with Children is associated with a 0.02198% increase in the percent of adults experiencing poor mental health for more than 14 days. Units with children may present lower financial security given the additional mouths to feed and children to care for, resulting in poor mental health.
+
+A 1% increase in a census tract’s Black population is associated with a 0.03217% increase in the percent of adults experiencing poor mental health for more than 14 days. A 1% increase in a census tract’s American Indian population is associated with a 0.02668% increase in the percent of adults experiencing poor mental health for more than 14 days. A 1% increase in a census tract’s Asian population is associated with a 0.05773% increase in the percent of adults experiencing poor mental health for more than 14 days. Racial discrimination and systemic racism towards non-white individuals can contribute to higher levels of hypertension and stress, so this logically results in more adults experiencing poor mental health.
+
+For categorical variables, the baseline intercept includes census tracts that have a majority highest level of education being Associate's Degrees and have limited food access (based on the USDA).
+
+Census tracts with the majority highest education level being GED have 0.008068% more adults experiencing poor mental health for more than 14 days compared to the baseline intercept. Census tracts with the majority highest education level being High School have 0.00226% more adults experiencing poor mental health for more than 14 days compared to the baseline intercept. These two degree types are the lowest attainable levels of education in the census and could result in lower income overall, meaning that financial security is lower and negatively impacts mental health.
+
+The estimate for Professional Degrees is 0.00729%, but it is not statistically significant. 
 
 
-(? Intercept describing two categorical variables?)
-1 not defined beceause of singularities - Two or More Races is almost perfectly correlated with another data point. Try to combine ROther and RTwoPlus
+Negative Correlation:
+The following summary assumes that all other variables are held constant, except for the independent variable in question:
+
+A 1 dollar increase in median income is associated with a decrease in adults reporting poor mental health for more than 14 days by 0.0000006253%. This indicates households with a higher median income have greater financial security which likely reduces the burden of stressors that impact mental health. In other words, a census tract with a median income $10,000,000 higher than another tract would be expected to have a 6.253% lower rate in adults reporting poor mental health. This independent variable has the smallest magnitude estimate, which means it does not influence poor mental health rate as much as the other variables.
+
+A 1 year increase in median age is associated with a decrease in adults reporting poor mental health for more than 14 days by 0.0009363%. A 1% increase in a census tract’s white population is associated with a decrease in adults reporting poor mental health for more than 14 days by 0.06413%. A 1%  increase in a census tract’s Native Hawaiian population is associated with a decrease in adults reporting poor mental health for more than 14 days by 0.02243%. A 1% increase in a census tract’s population of two or more races is associated with a decrease in adults reporting poor mental health for more than 14 days by 0.02564%. 
+
+For categorical variables, the baseline intercept includes census tracts that have a majority highest level of education being Associate's Degrees and have limited food access (based on the USDA).
+
+With respect to a census tract without food access (as defined by the USDA), census tract with food access are associated with a decrease in adults reporting poor mental health for more than 14 days by 0.0007844%. Being in close proximity to reliable food sources reduces the stress and challenges associated with procuring food which can contribute to better nutrition to support both physical and mental health. However in the context of this study, the estimate is the second smallest suggesting that the distance aspect of food access does not have a strong influence on mental health outcomes in adults. This does not mean other components of food access do not influence mental health outcomes, such as quality, transportation, and affordability.
+
+Census tracts with the majority highest educational attainment being a bachelor's degree are associated with a decrease in adults reporting poor mental health for more than 14 days by 0.009712%. Census tracts with the majority highest educational attainment being a doctorate degree are associated with a decrease in adults reporting poor mental health for more than 14 days by  0.01573%. Census tracts with the majority highest educational attainment being a masters degree are associated with a decrease in adults reporting poor mental health for more than 14 days by 0.009295%. These degrees are the highest levels of educational attainment which suggests these census tracts likely also have higher incomes and greater financial security, both factors that could reduce the likelihood of persisting poor mental health in adults.
+
 
 # References
 Ahern, Melissa, Brown, Cheryl, Dukas, Stephen. "A National Study of the Association Between Food Environments and County-Level Health Outcomes." The Journal of Rural Health 27, no. 4 (2011): 367-379. doi: https://doi.org/10.1111/j.1748-0361.2011.00378.x
