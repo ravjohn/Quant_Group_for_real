@@ -1,7 +1,7 @@
 ---
 title: "Assignment 4"
 author: "Raveena, Alanna, Jack"
-date: "11/11/2021"
+date: "11/12/2021"
 output: 
   html_document:
     theme: readable
@@ -594,7 +594,7 @@ full_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_Un
 summary(full_model)
 ```
 
-Overview
+## Overview
 We ran a multivariate linear regression of the independent variables in this analysis to examine their effects on the percent of people experiencing fourteen or more poor mental health days per year, across the United States at the scale of the census tract. The independent variables included are percent of population utilizing SNAP benefits, poverty rate, median income, median age, percent of households with children, if the census tract has high access to food (based on 1 mile for urban areas and 10 miles for rural areas), the most common highest educational attainment within the census tract, and the percent of population that identify as one of the following racial categories: white, Black, American Indian/Alaska Native, Asian, Native Hawiian, or two or more. The racial category of “other” was excluded from the regression to avoid a singularity, since all of the racial categories would add up to 100%. This would yield multicollinearity such that the regression would not be completed for all racial demographic variables. We chose to exclude “other” since it revealed the least information, as it is the broadest grouping within this part of the census.
 
 Of the independent variables included, all but the Professional Degree education category are significant within the 95% confidence interval. The High School education category and Native Hawiian racial percentage are significant, but have p-values of 0.031512 and 0.002276, respectively, which are much closer to the 95% interval than the other variables. SNAP usage, poverty rate, median income, median age, percent of households with children, and tracts where a Bachelor’s degree is the most common level of educational attainment are the variables with the lowest p-values, as close to 0 as R will compute.
@@ -602,7 +602,7 @@ Of the independent variables included, all but the Professional Degree education
 The model's R squared value is 0.843, so this combination of independent variables explains 84% of the variation in percent of population experiencing poor mental health for more than 14 days. This is a high R squared value, which could suggest that poor mental health is well predicted by the independent variables we included in this regression. Other independent variables to consider including to explain the remaining variation could be homeownership rates, physical health outcomes, and health care access.
 
 
-Positive Correlation:
+## Positive Correlation:
 The following summary assumes that all other variables are held constant, except for the independent variable in question:
 
 A 1% increase in SNAP utilization is associated with a 0.0177% increase in the percent of adults experiencing poor mental health for more than 14 days. SNAP is a food stamp program that assists low-income individuals, so higher SNAP utilization may indicate lower financial security resulting in poor mental health.
@@ -620,7 +620,7 @@ Census tracts with the majority highest education level being GED have 0.008068%
 The estimate for Professional Degrees is 0.00729%, but it is not statistically significant. 
 
 
-Negative Correlation:
+## Negative Correlation: 
 The following summary assumes that all other variables are held constant, except for the independent variable in question:
 
 A 1 dollar increase in median income is associated with a decrease in adults reporting poor mental health for more than 14 days by 0.0000006253%. This indicates households with a higher median income have greater financial security which likely reduces the burden of stressors that impact mental health. In other words, a census tract with a median income $10,000,000 higher than another tract would be expected to have a 6.253% lower rate in adults reporting poor mental health. This independent variable has the smallest magnitude estimate, which means it does not influence poor mental health rate as much as the other variables.
