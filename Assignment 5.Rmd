@@ -43,6 +43,7 @@ library(knitr)
 library(tigris)
 library(sf)
 library(gridExtra)
+library(jtools)
 ```
 
 
@@ -647,10 +648,32 @@ Census tracts with the majority highest educational attainment being a bachelor'
 
 ```
 
-## Raveena
+## Raveena - mean centering
 ```{r}
+centered_data <- data %>%
+  mutate(pct_SNAP = pct_SNAP - mean(pct_SNAP, na.rm=TRUE),
+         PovertyRate = PovertyRate - mean(PovertyRate, na.rm=TRUE),
+         MedIncomeE = MedIncomeE - mean(MedIncomeE, na.rm=TRUE),
+         MedAge = MedAge - mean(MedAge, na.rm=TRUE),
+         pct_UnitsWChildren = pct_UnitsWChildren - mean(pct_UnitsWChildren, na.rm=TRUE),
+         pct_RWhite = pct_RWhite - mean(pct_RWhite, na.rm=TRUE),
+         pct_RBlack = pct_RBlack - mean(pct_RBlack, na.rm=TRUE),
+         pct_RAI = pct_RAI - mean(pct_RAI, na.rm=TRUE),
+         pct_RAsian = pct_RAsian - mean(pct_RAsian, na.rm=TRUE),
+         pct_RNH = pct_RNH - mean(pct_RNH, na.rm=TRUE),
+         pct_RTwoPlus = pct_RTwoPlus - mean(pct_RTwoPlus, na.rm=TRUE),)
 
+centered_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, centered_data)
 
+centered_data_scaled <- centered_data %>%
+  mutate(pct_SNAP_100 = pct_SNAP * 100,
+         PovertyRate_100 = PovertyRate * 100,
+         MedIncome_10M = MedIncomeE * 10000000)
+
+export_summs(full_model, centered_model, 
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Initial", "Centered"))
 ```
 
 
