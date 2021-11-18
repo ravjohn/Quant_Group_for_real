@@ -638,8 +638,42 @@ Census tracts with the majority highest educational attainment being a bachelor'
 
 ## Jack
 ```{r}
+data_race_log <- data %>%
+  mutate(log2_pct_RWhite = log(pct_RWhite, base = 2),
+         log2_pct_RBlack = log(pct_RBlack, base = 2),
+         log2_pct_RAI = log(pct_RAI, base = 2),
+         log2_pct_RAsian = log(pct_RAsian, base = 2),
+         log2_pct_RNH = log(pct_RNH, base = 2),
+         log2_pct_RTwoPlus = log(pct_RTwoPlus, base = 2))
 
+coeff_names_race_log <- c("Constant" = "(Intercept)",
+                 "SNAP Utilization" = "pct_SNAP",
+                 "Poverty Rate" = "PovertyRate",
+                 "Median Income" = "MedIncomeE",
+                 "Units with Children %" = "pct_UnitsWChildren",
+                 "Doubling Percent White" = "log2_pct_white",
+                 "Doubling Percent Black" = "log2_pct_RBlack",
+                 "Doubling Percent American Indian" = "log2_pct_RAI",
+                 "Doubling Percent Asian" = "log2_pct_RAsian",
+                 "Doubling Percent Native Hawaiian" = "log2_pct_RNH",
+                 "Doubling Percent Two or More Races" = "log2_pct_RTwoPlus",
+                 "Access to Food (1 Mile Urban and 10 Miles Rural)" = "LA1and10",
+                 "Associates Degree Max Education" = "MaxEdAssociates",
+                 "Bachelors Degree Max Education" = "MaxEdBachelors",
+                 "Doctorate Degree Max Education" = "MaxEdDoctorate",
+                 "GED Max Education" = "MaxEdGED",
+                 "Masters Degree Max Education" = "MaxEdMasters",
+                 "Professional Degree Max Education" = "MaxEdProfessional")
+                   
+                   
+model_race_log <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + log2_pct_RWhite + log2_pct_RBlack + log2_pct_RAI + log2_pct_RAsian + log2_pct_RNH + log2_pct_RTwoPlus + LA1and10 + MaxEd, data = data_race_log)
 
+export_summs(full_model, model_race_log,
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Initial", 
+                             "Race Logged"),
+             coefs = coeff_names_race_log)
 ```
 
 ## Alanna
