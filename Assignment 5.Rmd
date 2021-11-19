@@ -656,7 +656,7 @@ coeff_names <- c("Constant" = "(Intercept)",
 scaled_data <- data %>%
   mutate(pct_SNAP = pct_SNAP / 100,
          PovertyRate = PovertyRate / 100,
-         MedIncome = MedIncomeE * 1000000,
+         MedIncomeE = MedIncomeE / 1000000,
          MedAge = MedAge / 10,
          pct_UnitsWChildren = pct_UnitsWChildren / 100,
          pct_RWhite = pct_RWhite / 100,
@@ -666,7 +666,7 @@ scaled_data <- data %>%
          pct_RNH = pct_RNH / 100,
          pct_RTwoPlus = pct_RTwoPlus / 100)
 
-scaled_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, centered_log_data_scaled)
+scaled_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, scaled_data)
 
 scaled_data_medIncome_log <- scaled_data %>%
   mutate(log2_MedIncome = log(MedIncomeE, base = 2))
@@ -683,6 +683,10 @@ export_summs(full_model, scaled_model, scaled_MedIncome_model_log,
                              "Median Income Logged"),
              coefs = coeff_names)
 ```
+
+We first scaled the continuous variables to represent whole numbers rather than percentages and to represent age by decades and median income by units of one million. This transformed the coefficient to be more legible in the context of the tables.
+
+The second transformation took the base 2 log of median income, which increased the R-squared value from 0.84 to 0.85. This nominal difference is a slightly better fit for the model.
 
 
 
