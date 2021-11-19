@@ -696,13 +696,7 @@ coeff_names <- c("Constant" = "(Intercept)",
                  "% Asian" = "pct_RAsian",
                  "% NH" = "pct_RNH",
                  "% Two Plus Races" = "pct_RTwoPlus",
-                 "Access to Food (1 Mile Urban and 10 Miles Rural)" = "LA1and10",
-                 "Associates Degree Max Education" = "MaxEdAssociates",
-                 "Bachelors Degree Max Education" = "MaxEdBachelors",
-                 "Doctorate Degree Max Education" = "MaxEdDoctorate",
-                 "GED Max Education" = "MaxEdGED",
-                 "Masters Degree Max Education" = "MaxEdMasters",
-                 "Professional Degree Max Education" = "MaxEdProfessional")
+                 "Access to Food (1 Mile Urban and 10 Miles Rural)" = "LA1and10")
               
 
 MedIncome_model_log <- lm(pct_PMH ~ pct_SNAP + PovertyRate + log2_MedIncome + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, data = data_medIncome_log)
