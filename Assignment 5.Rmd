@@ -636,52 +636,7 @@ Census tracts with the majority highest educational attainment being a bachelor'
 
 # Transformations
 
-## Jack
 ```{r}
-data_race_log <- data %>%
-  mutate(log2_pct_RWhite = log(pct_RWhite, base = 2),
-         log2_pct_RBlack = log(pct_RBlack, base = 2),
-         log2_pct_RAI = log(pct_RAI, base = 2),
-         log2_pct_RAsian = log(pct_RAsian, base = 2),
-         log2_pct_RNH = log(pct_RNH, base = 2),
-         log2_pct_RTwoPlus = log(pct_RTwoPlus, base = 2))
-
-coeff_names_race_log <- c("Constant" = "(Intercept)",
-                 "SNAP Utilization" = "pct_SNAP",
-                 "Poverty Rate" = "PovertyRate",
-                 "Median Income" = "MedIncomeE",
-                 "Units with Children %" = "pct_UnitsWChildren",
-                 "Doubling Percent White" = "log2_pct_white",
-                 "Doubling Percent Black" = "log2_pct_RBlack",
-                 "Doubling Percent American Indian" = "log2_pct_RAI",
-                 "Doubling Percent Asian" = "log2_pct_RAsian",
-                 "Doubling Percent Native Hawaiian" = "log2_pct_RNH",
-                 "Doubling Percent Two or More Races" = "log2_pct_RTwoPlus",
-                 "Access to Food (1 Mile Urban and 10 Miles Rural)" = "LA1and10",
-                 "Associates Degree Max Education" = "MaxEdAssociates",
-                 "Bachelors Degree Max Education" = "MaxEdBachelors",
-                 "Doctorate Degree Max Education" = "MaxEdDoctorate",
-                 "GED Max Education" = "MaxEdGED",
-                 "Masters Degree Max Education" = "MaxEdMasters",
-                 "Professional Degree Max Education" = "MaxEdProfessional")
-                   
-                   
-model_race_log <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + log2_pct_RWhite + log2_pct_RBlack + log2_pct_RAI + log2_pct_RAsian + log2_pct_RNH + log2_pct_RTwoPlus + LA1and10 + MaxEd, data = data_race_log)
-
-export_summs(full_model, model_race_log,
-             error_format = "(p = {p.value})",
-             error_pos = "same",
-             model.names = c("Initial", 
-                             "Race Logged"),
-             coefs = coeff_names_race_log)
-```
-
-## Alanna
-```{r}
-
-data_medIncome_log <- data %>%
-  mutate(log2_MedIncome = log(MedIncomeE + mean(data$MedIncomeE, na.rm = TRUE), base = 2))
-
 
 coeff_names <- c("Constant" = "(Intercept)",
                  "SNAP Utilization" = "pct_SNAP",
@@ -697,44 +652,11 @@ coeff_names <- c("Constant" = "(Intercept)",
                  "% NH" = "pct_RNH",
                  "% Two Plus Races" = "pct_RTwoPlus",
                  "Access to Food (1 Mile Urban and 10 Miles Rural)" = "LA1and10")
-              
 
-MedIncome_model_log <- lm(pct_PMH ~ pct_SNAP + PovertyRate + log2_MedIncome + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, data = data_medIncome_log)
-
-
-export_summs(full_model, MedIncome_model_log,
-             error_format = "(p = {p.value})",
-             error_pos = "same",
-             model.names = c("Initial", 
-                             "Median Income Logged"),
-             coefs = coeff_names)
-
-#error "unrecognized coefficient names: MaxEdAssociates" ???
-
-
-```
-
-## Raveena - mean centering
-```{r}
-centered_data <- data %>%
-  mutate(pct_SNAP = pct_SNAP - mean(pct_SNAP, na.rm=TRUE),
-         PovertyRate = PovertyRate - mean(PovertyRate, na.rm=TRUE),
-         MedIncomeE = MedIncomeE - mean(MedIncomeE, na.rm=TRUE),
-         MedAge = MedAge - mean(MedAge, na.rm=TRUE),
-         pct_UnitsWChildren = pct_UnitsWChildren - mean(pct_UnitsWChildren, na.rm=TRUE),
-         pct_RWhite = pct_RWhite - mean(pct_RWhite, na.rm=TRUE),
-         pct_RBlack = pct_RBlack - mean(pct_RBlack, na.rm=TRUE),
-         pct_RAI = pct_RAI - mean(pct_RAI, na.rm=TRUE),
-         pct_RAsian = pct_RAsian - mean(pct_RAsian, na.rm=TRUE),
-         pct_RNH = pct_RNH - mean(pct_RNH, na.rm=TRUE),
-         pct_RTwoPlus = pct_RTwoPlus - mean(pct_RTwoPlus, na.rm=TRUE),)
-
-centered_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, centered_data)
-
-centered_data_scaled <- centered_data %>%
+scaled_data <- data %>%
   mutate(pct_SNAP = pct_SNAP / 100,
          PovertyRate = PovertyRate / 100,
-         MedIncome = MedIncomeE * 10000000,
+         MedIncome = MedIncomeE * 1000000,
          MedAge = MedAge / 10,
          pct_UnitsWChildren = pct_UnitsWChildren / 100,
          pct_RWhite = pct_RWhite / 100,
@@ -744,12 +666,22 @@ centered_data_scaled <- centered_data %>%
          pct_RNH = pct_RNH / 100,
          pct_RTwoPlus = pct_RTwoPlus / 100)
 
-centered_model_scaled <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, centered_data_scaled)
+scaled_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + MedIncomeE + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, centered_log_data_scaled)
 
-export_summs(full_model, centered_model, centered_model_scaled,
+scaled_data_medIncome_log <- scaled_data %>%
+  mutate(log2_MedIncome = log(MedIncomeE, base = 2))
+              
+
+scaled_MedIncome_model_log <- lm(pct_PMH ~ pct_SNAP + PovertyRate + log2_MedIncome + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd, data = scaled_data_medIncome_log)
+
+
+export_summs(full_model, scaled_model, scaled_MedIncome_model_log,
              error_format = "(p = {p.value})",
              error_pos = "same",
-             model.names = c("Initial", "Centered", "Centered + Scaled"))
+             model.names = c("Initial", 
+                             "Scaled Data",
+                             "Median Income Logged"),
+             coefs = coeff_names)
 ```
 
 
