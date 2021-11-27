@@ -690,7 +690,69 @@ The second transformation took the base 2 log of median income, which increased 
 # Interactions
 
 ## Alanna
+Testing interaction between pct_SNAP and MaxEd on the relationship with Poor Mental Health
 ```{r}
+
+coeff_names_interaction <- c("Constant" = "(Intercept)",
+                 "SNAP Utilization" = "pct_SNAP",
+                 "Poverty Rate" = "PovertyRate",
+                 "Median Age" = "MedAge",
+                 "Median Income" = "MedIncomeE",
+                 "Doubling Median Income" = "log2_MedIncome",
+                 "% Units with Children" = "pct_UnitsWChildren",
+                 "% White" = "pct_RWhite",
+                 "% Black" = "pct_RBlack",
+                 "% AI" = "pct_RAI",
+                 "% Asian" = "pct_RAsian",
+                 "% NH" = "pct_RNH",
+                 "% Two Plus Races" = "pct_RTwoPlus",
+                 "Access to Food (1 Mile Urban and 10 Miles Rural)" = "LA1and10")
+                   
+                   
+interaction_SNAP_ED_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + log2_MedIncome + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd + pct_SNAP*MaxEd, data = scaled_data_medIncome_log)
+
+export_summs(scaled_MedIncome_model_log, interaction_SNAP_ED_model,
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Median Income Logged",
+                             "SNAP and Ed Interaction"))
+
+```
+PLOT. X axis labels not showing and not sure PMH is showing up correctly?
+```{r}
+
+interact_plot(interaction_SNAP_ED_model, pred = pct_SNAP, modx = MaxEd,
+              interval = TRUE) +
+  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
+                     labels = round(breaks * 10 + mean(data$pct_SNAP, na.rm = TRUE)),
+                     name = "SNAP Utilization") +
+  scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
+
+```
+
+Testing interaction between pct_SNAP and pct_UnitsWChildren on the relationship with Poor Mental Health
+```{r}
+interaction_SNAP_Child_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + log2_MedIncome + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd + pct_SNAP*pct_UnitsWChildren, data = scaled_data_medIncome_log)
+
+export_summs(scaled_MedIncome_model_log, interaction_SNAP_Child_model,
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Median Income Logged",
+                             "SNAP and Children Interaction"))
+
+
+
+```
+PLOT.
+```{r}
+
+interact_plot(interaction_SNAP_Child_model, pred = pct_SNAP, modx = pct_UnitsWChildren,
+              interval = TRUE) +
+  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
+                     labels = round(breaks * 10 + mean(data$pct_SNAP, na.rm = TRUE)),
+                     name = "SNAP Utilization") +
+  scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
+
 
 ```
 
