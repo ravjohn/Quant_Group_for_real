@@ -786,21 +786,9 @@ export_summs(scaled_MedIncome_model_log, interaction_income_access_model,
 
 interact_plot(interaction_income_access_model, pred = log2_MedIncome, modx = LA1and10,
               interval = TRUE) +
-  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
-                     labels = round(breaks * 10 + mean(data(MedIncomeE), na.rm = TRUE)),
-                     name = "Median income") +
+  scale_x_continuous(name = "log2_MedIncome") +
   scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 
-```
-
-Graph it! X legend not working...???
-```{r}
-interact_plot(interaction_income_access_model, pred = log2_MedIncome, modx = LA1and10,
-              interval = TRUE) +
-  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
-                     labels = round(breaks * 10 + mean(data(MedIncomeE), na.rm = TRUE)),
-                     name = "Median income") +
-  scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 ```
 
 ## Raveena
