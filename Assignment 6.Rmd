@@ -837,6 +837,15 @@ interact_plot(interaction_SNAP_access_model, pred = pct_SNAP, modx = LA1and10,
   scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 ```
 
+```{r}
+export_summs(full_model, scaled_MedIncome_model_log, interaction_SNAP_access_model,
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Initial", 
+                             "Median Income Logged",
+                             "Median Income Logged and SNAP:Food Access Interaction"),
+             coefs = coeff_names)
+```
 
 
 # References
