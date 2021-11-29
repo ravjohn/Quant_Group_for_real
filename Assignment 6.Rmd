@@ -723,9 +723,7 @@ PLOT. X axis labels not showing and not sure PMH is showing up correctly?
 
 interact_plot(interaction_SNAP_ED_model, pred = pct_SNAP, modx = MaxEd,
               interval = TRUE) +
-  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
-                     labels = round(breaks * 10 + mean(data$pct_SNAP, na.rm = TRUE)),
-                     name = "SNAP Utilization") +
+  scale_x_continuous(name = "SNAP Utilization") +
   scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 
 ```
@@ -748,9 +746,7 @@ PLOT.
 
 interact_plot(interaction_SNAP_Child_model, pred = pct_SNAP, modx = pct_UnitsWChildren,
               interval = TRUE) +
-  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
-                     labels = round(breaks * 10 + mean(data$pct_SNAP, na.rm = TRUE)),
-                     name = "SNAP Utilization") +
+  scale_x_continuous(name = "SNAP Utilization") +
   scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 
 
@@ -831,9 +827,7 @@ export_summs(scaled_MedIncome_model_log, interaction_SNAP_access_model,
 
 interact_plot(interaction_SNAP_access_model, pred = pct_SNAP, modx = LA1and10,
               interval = TRUE) +
-  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
-                     labels = round(breaks * 10 + mean(data(MedIncomeE), na.rm = TRUE)),
-                     name = "Percent SNAP Usage") +
+  scale_x_continuous(name = "Percent SNAP Usage") +
   scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 ```
 
