@@ -756,10 +756,6 @@ interact_plot(interaction_SNAP_Child_model, pred = pct_SNAP, modx = pct_UnitsWCh
 
 ```
 
-## Raveena
-``` {r}
-
-```
 
 ## Jack
 Testing relationship between median income and poor mental health change depending on access to food within 1 mile urban and 10 mile rural?
@@ -788,6 +784,13 @@ export_summs(scaled_MedIncome_model_log, interaction_income_access_model,
              model.names = c("Median Income Logged",
                              "Income and Access Interaction"))
 
+interact_plot(interaction_income_access_model, pred = log2_MedIncome, modx = LA1and10,
+              interval = TRUE) +
+  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
+                     labels = round(breaks * 10 + mean(data(MedIncomeE), na.rm = TRUE)),
+                     name = "Median income") +
+  scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
+
 ```
 
 Graph it! X legend not working...???
@@ -797,6 +800,40 @@ interact_plot(interaction_income_access_model, pred = log2_MedIncome, modx = LA1
   scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
                      labels = round(breaks * 10 + mean(data(MedIncomeE), na.rm = TRUE)),
                      name = "Median income") +
+  scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
+```
+
+## Raveena
+``` {r}
+coeff_names_interaction <- c("Constant" = "(Intercept)",
+                 "SNAP Utilization" = "pct_SNAP",
+                 "Poverty Rate" = "PovertyRate",
+                 "Median Age" = "MedAge",
+                 "Median Income" = "MedIncomeE",
+                 "Doubling Median Income" = "log2_MedIncome",
+                 "% Units with Children" = "pct_UnitsWChildren",
+                 "% White" = "pct_RWhite",
+                 "% Black" = "pct_RBlack",
+                 "% AI" = "pct_RAI",
+                 "% Asian" = "pct_RAsian",
+                 "% NH" = "pct_RNH",
+                 "% Two Plus Races" = "pct_RTwoPlus",
+                 "Access to Food (1 Mile Urban and 10 Miles Rural)" = "LA1and10")
+                   
+                   
+interaction_SNAP_access_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + log2_MedIncome + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd + pct_SNAP*LA1and10, data = scaled_data_medIncome_log)
+
+export_summs(scaled_MedIncome_model_log, interaction_SNAP_access_model,
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Percent SNAP",
+                             "Income and Access Interaction"))
+
+interact_plot(interaction_SNAP_access_model, pred = pct_SNAP, modx = LA1and10,
+              interval = TRUE) +
+  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
+                     labels = round(breaks * 10 + mean(data(MedIncomeE), na.rm = TRUE)),
+                     name = "Percent SNAP Usage") +
   scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 ```
 
