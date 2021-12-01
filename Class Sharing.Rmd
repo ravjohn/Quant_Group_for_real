@@ -11,21 +11,15 @@ output:
 ---
 
 # Research Question
-How do food access and demographic characteristics impact mental health on a census tract scale?
+How does food access impact mental health across the United States?
 
 # Prior Research
 Seligman and Schillinger (2010) posit that food insecurity and chronic disease follows a cyclical pattern where food insecurity leads to chronic disease, thereby increasing medical costs and causing low income households to make trade-offs in spending, often leading to less money available to address food insecurity. Additionally, the results of Jones (2017) suggests that individual food insecurity is associated with poorer mental health and specific psychosocial stressors across global regions independent of socio-ecoomic status.
 
 # Data
-The sample population for this study is the full set of all census tracts in the United States, for all people over the age of 18. The analysis will include the following variables:
-
-Categorical
+The sample population for this study is the full set of all census tracts in the United States, for all people over the age of 18. The analysis includes the following variables:
 
 * Access to food options within 1 mile urban or 10 miles rural
-* Education, most common attainment per census tract
-
-Continuous
-
 * Percent of adults experiencing poor mental health for 14 days or more
 * Percent of households using SNAP
 * Poverty rate
@@ -33,6 +27,7 @@ Continuous
 * Percent of households with children
 * Age
 * Race
+* Education, most common attainment per census tract
 
 <!-- ## Load Data -->
 ```{r, echo = FALSE, message = FALSE, results = FALSE, warning = FALSE}
@@ -814,6 +809,14 @@ export_summs(scaled_MedIncome_model_log, interaction_SNAP_access_model,
                              "Income and Access Interaction"))
 ```
 
+We ran a multivariate linear regression of the independent variables in this analysis to examine their effects on the percent of people experiencing fourteen or more poor mental health days per year, across the United States at the scale of the census tract. The independent variables included are percent of population utilizing SNAP benefits, poverty rate, median income, median age, percent of households with children, if the census tract has high access to food (based on 1 mile for urban areas and 10 miles for rural areas), the most common highest educational attainment within the census tract, and the percent of population that identify as one of the following racial categories: white, Black, American Indian/Alaska Native, Asian, Native Hawiian, or two or more.
+
+The model's R squared value is 0.843, so this combination of independent variables explains 84% of the variation in percent of population experiencing poor mental health for more than 14 days. This is a high R squared value, which could suggest that poor mental health is well predicted by the independent variables we included in this regression. Other independent variables to consider including to explain the remaining variation could be homeownership rates, physical health outcomes, and health care access.
+
+We transformed the data by taking the base 2 log of median income, which increased the R-squared value from 0.84 to 0.85. This nominal difference is a slightly better fit for the model.
+
+Including an interaction between percent SNAP utilization and food access by distance did not change the model fit any further. This interaction revealed that poor mental health rates increased at a greater rate as SNAP utilization increased for census tracts within the definition of food access (10 miles in a rural area and 1 mile in an urban area), compared to census tracts out of the food access area. This is a surprising result, as we had expected to see increased food access by distance lessen the effects on mental health.
+
 ## Interaction Model
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
@@ -836,6 +839,10 @@ export_summs(full_model, scaled_MedIncome_model_log, interaction_SNAP_access_mod
                              "Median Income Logged and SNAP:Food Access Interaction"),
              coefs = coeff_names)
 ```
+
+# Conclusion
+The model of logged median income and the interaction coefficient for percent SNAP usage and food access is our preferred model because it is among the models with the best fit (R-squared value of 0.85) and it leads to more questions for further research. What other factors cause the difference in mental health as correlated with SNAP usage when comparing areas of high food access to areas of low food access?
+
 
 
 # References
