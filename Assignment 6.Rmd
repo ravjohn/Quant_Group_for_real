@@ -689,8 +689,7 @@ The second transformation took the base 2 log of median income, which increased 
 
 # Interactions
 
-## Alanna
-Testing interaction between pct_SNAP and MaxEd on the relationship with Poor Mental Health
+## pct_SNAP and MaxEd
 ```{r}
 
 coeff_names_interaction <- c("Constant" = "(Intercept)",
@@ -718,19 +717,25 @@ export_summs(scaled_MedIncome_model_log, interaction_SNAP_ED_model,
                              "SNAP and Ed Interaction"))
 
 ```
-PLOT. X axis labels not showing and not sure PMH is showing up correctly?
+
 ```{r}
 
 interact_plot(interaction_SNAP_ED_model, pred = pct_SNAP, modx = MaxEd,
               interval = TRUE) +
-  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
-                     labels = round(breaks * 10 + mean(data$pct_SNAP, na.rm = TRUE)),
-                     name = "SNAP Utilization") +
+  scale_x_continuous(name = "SNAP Utilization") +
   scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 
 ```
 
-Testing interaction between pct_SNAP and pct_UnitsWChildren on the relationship with Poor Mental Health
+
+
+The model fit did not change. The interaction between SNAP utilization and maximum educational attainment is only significant for GED. The coefficient is positive as is the coefficient for pct_SNAP indicating the relationship between SNAP utilization and poor mental health days is stronger in census tracts that have GED as the maximum educational attainment. 
+
+
+
+
+
+## pct_SNAP and pct_UnitsWChildren
 ```{r}
 interaction_SNAP_Child_model <- lm(pct_PMH ~ pct_SNAP + PovertyRate + log2_MedIncome + MedAge + pct_UnitsWChildren + pct_RWhite + pct_RBlack + pct_RAI + pct_RAsian + pct_RNH + pct_RTwoPlus+ LA1and10 + MaxEd + pct_SNAP*pct_UnitsWChildren, data = scaled_data_medIncome_log)
 
@@ -743,22 +748,25 @@ export_summs(scaled_MedIncome_model_log, interaction_SNAP_Child_model,
 
 
 ```
-PLOT.
+
 ```{r}
 
 interact_plot(interaction_SNAP_Child_model, pred = pct_SNAP, modx = pct_UnitsWChildren,
               interval = TRUE) +
-  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
-                     labels = round(breaks * 10 + mean(data$pct_SNAP, na.rm = TRUE)),
-                     name = "SNAP Utilization") +
+  scale_x_continuous(name = "SNAP Utilization") +
   scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 
 
 ```
 
 
-## Jack
-Testing relationship between median income and poor mental health change depending on access to food within 1 mile urban and 10 mile rural?
+
+The model fit did not change. The interaction between SNAP utilization and units with children is positive and significant. This indicates census tracts with higher utilization of SNAP and higher percentages of households with children experience higher amounts of  poor mental health days. 
+
+
+
+
+## median income and access to food within 1 mile urban and 10 mile rural
 ```{r}
 coeff_names_interaction <- c("Constant" = "(Intercept)",
                  "SNAP Utilization" = "pct_SNAP",
@@ -783,7 +791,8 @@ export_summs(scaled_MedIncome_model_log, interaction_income_access_model,
              error_pos = "same",
              model.names = c("Median Income Logged",
                              "Income and Access Interaction"))
-
+```
+```{r}
 interact_plot(interaction_income_access_model, pred = log2_MedIncome, modx = LA1and10,
               interval = TRUE) +
   scale_x_continuous(name = "log2_MedIncome") +
@@ -791,7 +800,15 @@ interact_plot(interaction_income_access_model, pred = log2_MedIncome, modx = LA1
 
 ```
 
-## Raveena
+
+
+
+The model fit does not change with this interaction, but the interaction between food access and logged median income is significant with a p-value of 0.01. There is a slight difference in the relationship between logged median income and poor mental health when interacting with food access; for areas with food access, median income has less of an effect on poor mental health days.
+
+
+
+
+## pct_SNAP and access to food within 1 mile urban and 10 mile rural
 ``` {r}
 coeff_names_interaction <- c("Constant" = "(Intercept)",
                  "SNAP Utilization" = "pct_SNAP",
@@ -816,15 +833,22 @@ export_summs(scaled_MedIncome_model_log, interaction_SNAP_access_model,
              error_pos = "same",
              model.names = c("Percent SNAP",
                              "Income and Access Interaction"))
-
+```
+```{r}
 interact_plot(interaction_SNAP_access_model, pred = pct_SNAP, modx = LA1and10,
               interval = TRUE) +
-  scale_x_continuous(breaks = breaks <- c(-2, -1, 0, 1, 2),
-                     labels = round(breaks * 10 + mean(data(MedIncomeE), na.rm = TRUE)),
-                     name = "Percent SNAP Usage") +
+  scale_x_continuous(name = "Percent SNAP Usage") +
   scale_y_continuous(name = "Percent of Adults Experiencing Poor\n Mental Health 14 days or more")
 ```
 
+
+
+
+Including an interaction between percent SNAP utilization and food access by distance did not change the model fit. This interaction revealed that poor mental health rates increased at a greater rate as SNAP utilization increased  for census tracts within the definition of food access (10 miles in a rural area and 1 mile in an urban area), compared to census tracts out of the food access area. This is a surprising result, as we had expected to see increased food access by distance lessen the effects on mental health.
+
+
+
+## Final Model
 ```{r}
 export_summs(full_model, scaled_MedIncome_model_log, interaction_SNAP_access_model,
              error_format = "(p = {p.value})",
@@ -834,6 +858,11 @@ export_summs(full_model, scaled_MedIncome_model_log, interaction_SNAP_access_mod
                              "Median Income Logged and SNAP:Food Access Interaction"),
              coefs = coeff_names)
 ```
+
+
+
+Adding the  interaction coefficients described above to the regression analysis did not change the model fit compared to the model with the log of median income. The model of logged median income and the interaction coefficient for percent SNAP usage and food access is our preferred model because it is among the models with the best fit (R-squared value of 0.85) and it leads to more questions for further research. What other factors are leading to the difference in mental health as correlated with SNAP usage when comparing areas of high food access to areas of low food access?
+
 
 
 # References
