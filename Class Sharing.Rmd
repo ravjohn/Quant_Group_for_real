@@ -11,13 +11,13 @@ output:
 ---
 
 # Research Question
-How does food access impact mental health across the United States?
+How does food access impact adult mental health across the United States?
 
 # Prior Research
 Seligman and Schillinger (2010) posit that food insecurity and chronic disease follows a cyclical pattern where food insecurity leads to chronic disease, thereby increasing medical costs and causing low income households to make trade-offs in spending, often leading to less money available to address food insecurity. Additionally, the results of Jones (2017) suggests that individual food insecurity is associated with poorer mental health and specific psychosocial stressors across global regions independent of socio-ecoomic status.
 
 # Data
-The sample population for this study is the full set of all census tracts in the United States, for all people over the age of 18. The analysis includes the following variables:
+The sample population for this study is the full set of all census tracts in the United States for people over the age of 18. The analysis includes the following variables:
 
 * Access to food options within 1 mile urban or 10 miles rural
 * Percent of adults experiencing poor mental health for 14 days or more
@@ -173,7 +173,7 @@ age_hist <- ggplot(data) +
 <!-- ### Results for Continuous Variables -->
 ```{r, echo = FALSE, message = FALSE, results = FALSE, warning = FALSE}
 cont_summary <- tibble(
-  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More", "Median Age","Poverty Rate", "Percent Households SNAP", "Median Income", "Pct of Census Tract with Poor Mental Health for 14 days or more"),
+  Variable = c("% Households with Children", "% White", "% Black", "% AI/AN", "% Asian", "% Hawaiian", "% Other", "% Two or More", "Median Age","Poverty Rate", "Percent Households SNAP", "Median Income", "Pct of Census Tracts with Poor Mental Health for 14 days or more"),
   `Sample mean` = c(children_t_test$estimate * 100,
                     RWhite_t_test$estimate * 100,
                     RBlack_t_test$estimate * 100,
@@ -263,61 +263,61 @@ kable(cont_summary, digits = 0)
 pretty_children_hist <- children_hist +
   theme_bw() +
   scale_x_continuous(name = "% Households with Children") +
-  scale_y_continuous(name = "Number of census tracts") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RWhite_hist <- RWhite_hist +
   theme_bw() +
   scale_x_continuous(name = "% White Only") +
-  scale_y_continuous(name = "Number of census tracts") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RBlack_hist <- RBlack_hist +
   theme_bw() +
   scale_x_continuous(name = "% Black Only") +
-  scale_y_continuous(name = "Number of census tracts") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RAI_hist <- RAI_hist +
   theme_bw() +
   scale_x_continuous(name = "% AI/AN Only") +
-  scale_y_continuous(name = "Number of census tracts") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RAsian_hist <- RAsian_hist +
   theme_bw() +
   scale_x_continuous(name = "% Asian Only") +
-  scale_y_continuous(name = "Number of census tracts") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RNH_hist <- RNH_hist +
   theme_bw() +
   scale_x_continuous(name = "% Hawiian Only") +
-  scale_y_continuous(name = "Number of census tracts") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_ROther_hist <- ROther_hist +
   theme_bw() +
   scale_x_continuous(name = "% Other") +
-  scale_y_continuous(name = "Number of census tracts") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_RTwoPlus_hist <- RTwoPlus_hist +
   theme_bw() +
   scale_x_continuous(name = "% Two or More") +
-  scale_y_continuous(name = "Number of census tracts") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_age_hist <- age_hist +
   theme_bw() +
   scale_x_continuous(name = "Median Age") +
-  scale_y_continuous(name = "Number of census tracts") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_pov_hist <- pov_hist +
   theme_bw() +
   scale_x_continuous(name = "Median Poverty Rate") +
-  scale_y_continuous(name = "Number of Census Tracks") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 pretty_SNAP_hist <- SNAP_hist +
@@ -335,7 +335,7 @@ pretty_income_hist = income_hist +
 pretty_MentalHealth_hist <- MentalHealth_hist +
   theme_bw() +
   scale_x_continuous(name = "Percent of Adults Reporting Negative\n Mental Health for 14+ days") +
-  scale_y_continuous(name = "Number of Census Tracks") +
+  scale_y_continuous(name = "Number of Census Tracts") +
   theme(text = element_text(size=6),axis.text.x = element_text(angle = 90))
 
 grid.arrange(pretty_children_hist, pretty_RWhite_hist, pretty_RBlack_hist, pretty_RAI_hist, pretty_RAsian_hist, pretty_ROther_hist, pretty_RTwoPlus_hist, pretty_age_hist, pretty_pov_hist, pretty_SNAP_hist, pretty_income_hist, pretty_MentalHealth_hist,
@@ -444,7 +444,7 @@ ggplot(cat_summary_Ed) +
                ymin = `95-percent confidence - low`,
                ymax = `95-percent confidence - high`),
            stat = "identity") +
-  scale_y_continuous(name = "Percent of census tracts",
+  scale_y_continuous(name = "Percent of Census Tracts",
                      breaks = c(0, 20, 40, 60, 80),
                      labels = c("0", "20%", "40%", "60%", "80%")) +
   theme_bw()
@@ -470,7 +470,7 @@ cor.test(~ pct_PMH + MedIncomeE, data = data)
 MedIncome_model <- lm(pct_PMH ~ MedIncomeE, data = data)
 
 ```
-<!-- The correlation for mental health and median income is -0.7605683 and the 95% confidence interval is below zero. This indicates we can say with 95% that there is a negative correlation between mental health and median incom. As the median income increases within a census track, the percent of adults reporting poor mental health decreases. -->
+<!-- The correlation for mental health and median income is -0.7605683 and the 95% confidence interval is below zero. This indicates we can say with 95% that there is a negative correlation between mental health and median income. As the median income increases within a census track, the percent of adults reporting poor mental health decreases. -->
 
 
 <!-- ### Poverty Rate -->
@@ -490,7 +490,7 @@ cor.test(~ pct_PMH + pct_SNAP, data = data)
 
 SNAP_model <- lm(pct_PMH ~ pct_SNAP, data = data)
 ```
-<!-- The correlation for mental health and percent of households using SNAP is 0.6922096, and the 95% confidence interval is above zero. We can say with 95% confidence that an increase in households using SNAP correlates with an increase in poor mental health outcomes. -->
+<!-- The correlation for mental health and percent of households using SNAP is 0.6922096, and the 95% confidence interval is above zero. We can say with 95% confidence that an increase in households using SNAP correlates with an increase in adults reporting poor mental health. -->
 
 <!-- ### Percent of Households with Children - HIDE -->
 ```{r, echo = FALSE, message = FALSE, results = FALSE, warning = FALSE}
@@ -572,9 +572,9 @@ FoodAccess_model <- lm(pct_PMH ~ LA1and10, data = data)
 summary(FoodAccess_model)
 
 ```
-<!-- The p-value for mental health and food access is < 2.2e-16, the lowest p value amount, indicating the relationship is significant and the confidence intervals are both 95%. The correlation estimate is negative indicating we can expect both urban and rural census blocks with access to food* to have a lower percentage of adults reporting poor mental health.  -->
+<!-- The p-value for mental health and food access is < 2.2e-16, the lowest p value amount, indicating the relationship is significant and the confidence intervals are both 95%. The correlation estimate is negative indicating we can expect both urban and rural census tracts with access to food* to have a lower percentage of adults reporting poor mental health.  -->
 
-<!-- *The USDA defines urban census blocks within 1 mile of food and rural census blocks within 10 miles of food as having food access. -->
+<!-- *The USDA defines urban census tracts within 1 mile of food and rural census tracts within 10 miles of food as having food access. -->
 
 <!-- ### Education - HIDE -->
 ```{r, echo = FALSE, message = FALSE, results = FALSE, warning = FALSE}
@@ -596,7 +596,7 @@ summary(full_model)
 ```
 
 <!-- ## Overview -->
-<!-- We ran a multivariate linear regression of the independent variables in this analysis to examine their effects on the percent of people experiencing fourteen or more poor mental health days per year, across the United States at the scale of the census tract. The independent variables included are percent of population utilizing SNAP benefits, poverty rate, median income, median age, percent of households with children, if the census tract has high access to food (based on 1 mile for urban areas and 10 miles for rural areas), the most common highest educational attainment within the census tract, and the percent of population that identify as one of the following racial categories: white, Black, American Indian/Alaska Native, Asian, Native Hawiian, or two or more. The racial category of “other” was excluded from the regression to avoid a singularity, since all of the racial categories would add up to 100%. This would yield multicollinearity such that the regression would not be completed for all racial demographic variables. We chose to exclude “other” since it revealed the least information, as it is the broadest grouping within this part of the census. -->
+<!-- We ran a multivariate linear regression of the independent variables in this analysis to examine their effects on the percent of people experiencing fourteen or more poor mental health days per year, across the United States at the scale of the census tract. The independent variables included are percent of population utilizing SNAP benefits, poverty rate, median income, median age, percent of households with children, if the census tract has high access to food (based on 1 mile for urban areas and 10 miles for rural areas), the most common highest educational attainment within the census tract, and the percent of population that identify as one of the following racial categories: white, Black, American Indian/Alaska Native, Asian, Native Hawiian, or two or more. The racial category of “other” was excluded from the regression to avoid a singularity, since all of the racial categories would add up to 100%. This would yield multicollinearity such that the regression would not be completed for all racial demographic variables. We chose to exclude “other” since it is the broadest grouping within this part of the census and therefore revealed the least amount of information. -->
 
 <!-- Of the independent variables included, all but the Professional Degree education category are significant within the 95% confidence interval. The High School education category and Native Hawiian racial percentage are significant, but have p-values of 0.031512 and 0.002276, respectively, which are much closer to the 95% interval than the other variables. SNAP usage, poverty rate, median income, median age, percent of households with children, and tracts where a Bachelor’s degree is the most common level of educational attainment are the variables with the lowest p-values, as close to 0 as R will compute. -->
 
@@ -809,13 +809,13 @@ export_summs(scaled_MedIncome_model_log, interaction_SNAP_access_model,
                              "Income and Access Interaction"))
 ```
 
-We ran a multivariate linear regression of the independent variables in this analysis to examine their effects on the percent of people experiencing fourteen or more poor mental health days per year, across the United States at the scale of the census tract. The independent variables included are percent of population utilizing SNAP benefits, poverty rate, median income, median age, percent of households with children, if the census tract has high access to food (based on 1 mile for urban areas and 10 miles for rural areas), the most common highest educational attainment within the census tract, and the percent of population that identify as one of the following racial categories: white, Black, American Indian/Alaska Native, Asian, Native Hawiian, or two or more.
+We ran a multivariate linear regression of the independent variables in this analysis to examine their effects on the percent of people experiencing fourteen or more poor mental health days per year, across the United States at the scale of the census tract. The independent variables included are percent of population utilizing SNAP benefits, poverty rate, median income, median age, percent of households with children, if the census tract has high access to food (based on 1 mile for urban areas and 10 miles for rural areas), the most common highest educational attainment level within the census tract, and the percent of population that identify as one of the following racial categories: white, Black, American Indian/Alaska Native, Asian, Native Hawiian, or two or more.
 
-The model's R squared value is 0.843, so this combination of independent variables explains 84% of the variation in percent of population experiencing poor mental health for more than 14 days. This is a high R squared value, which could suggest that poor mental health is well predicted by the independent variables we included in this regression. Other independent variables to consider including to explain the remaining variation could be homeownership rates, physical health outcomes, and health care access.
+**The model's R squared value is 0.843, so this combination of independent variables explains 84% of the variation in percent of population experiencing poor mental health for more than 14 days.** This is a high R squared value, which could suggest that poor mental health is well predicted by the independent variables we included in this regression. Other independent variables to consider including to explain the remaining variation could be homeownership rates, physical health outcomes, and health care access.
 
-We transformed the data by taking the base 2 log of median income, which increased the R-squared value from 0.84 to 0.85. This nominal difference is a slightly better fit for the model.
+We transformed the data by taking the base 2 log of median income, which **increased the R-squared value from 0.84 to 0.85.** This nominal difference is a slightly better fit for the model.
 
-Including an interaction between percent SNAP utilization and food access by distance did not change the model fit any further. This interaction revealed that poor mental health rates increased at a greater rate as SNAP utilization increased for census tracts within the definition of food access (10 miles in a rural area and 1 mile in an urban area), compared to census tracts out of the food access area. This is a surprising result, as we had expected to see increased food access by distance lessen the effects on mental health.
+Including an interaction between percent SNAP utilization and food access by distance did not change the model fit any further. **This interaction revealed that poor mental health rates increased at a greater rate as SNAP utilization increased for census tracts within the definition of food access (10 miles in a rural area and 1 mile in an urban area), compared to census tracts out of the food access area.** This is a surprising result as we had expected to see increased food access by distance reduce the effects on mental health.
 
 ## Interaction Model
 
@@ -841,7 +841,7 @@ export_summs(full_model, scaled_MedIncome_model_log, interaction_SNAP_access_mod
 ```
 
 # Conclusion
-The model of logged median income and the interaction coefficient for percent SNAP usage and food access is our preferred model because it is among the models with the best fit (R-squared value of 0.85) and it leads to more questions for further research. What other factors cause the difference in mental health as correlated with SNAP usage when comparing areas of high food access to areas of low food access?
+**The model of logged median income and the interaction coefficient for percent SNAP usage and food access is our preferred model because it is among the models with the best fit (R-squared value of 0.85) and it leads to more questions for further research.** What other factors cause the difference in mental health as correlated with SNAP usage when comparing areas of high food access to areas of low food access?
 
 
 
