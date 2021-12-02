@@ -837,7 +837,7 @@ export_summs(full_model, scaled_MedIncome_model_log, interaction_SNAP_access_mod
              model.names = c("Initial", 
                              "Median Income Logged",
                              "Median Income Logged and SNAP:Food Access Interaction"),
-             coefs = coeff_names)
+             coeffs = coeff_names_interaction)
 ```
 
 # Conclusion
