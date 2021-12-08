@@ -19,16 +19,16 @@ Seligman and Schillinger (2010) posit that food insecurity and chronic disease f
 # Data
 ## Categorical
 * Access to food options within 1 mile urban or 10 miles rural (USDA)
-* Education, most common attainment per census tract (US census)
+* Education, most common attainment per census tract (2010 US census)
 
 ## Continuous
 * Percent of adults experiencing poor mental health for 14 days or more (CDC)
 * Percent of households using SNAP (USDA)
 * Poverty rate (USDA)
-* Median income (US census)
-* Percent of households with children (US census)
-* Median Age (US census)
-* Race (US census)
+* Median income (2010 US census)
+* Percent of households with children (2010 US census)
+* Median Age (2010 US census)
+* Race (2010 US census)
 
 <!-- ## Load Data -->
 ```{r, echo = FALSE, message = FALSE, results = FALSE, warning = FALSE}
@@ -862,6 +862,7 @@ The results of our study support the findings of Jones (2017) and further demons
 In context to planning practice, our study highlights the need to analyze multiple socio-economic factors and their possible interactions when assessing food access and health outcomes in a population. Simply increasing the number of food options or an individual’s ability to access them through a subsidy or voucher is not enough and needs to work in tandem with other people-based and place-based interventions that reduce barriers to an individual achieving financial security. Additionally, food access and mental health outcomes should be independently studied at the local level to fully understand existing dynamics and the unique circumstances a population might face in a particular location.
 
 # Appendix
+[Follow this link](https://ravjohn.github.io/Quant_Group_for_real/Appendix.html) to see the code used for this project.
 
 # References
 Ahern, Melissa, Brown, Cheryl, Dukas, Stephen. "A National Study of the Association Between Food Environments and County-Level Health Outcomes." The Journal of Rural Health 27, no. 4 (2011): 367-379. doi: https://doi.org/10.1111/j.1748-0361.2011.00378.x
